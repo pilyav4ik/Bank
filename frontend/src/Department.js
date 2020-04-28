@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import AppNav from "./AppNav";
 class Department extends Component {
 
     state = {
@@ -8,7 +7,7 @@ class Department extends Component {
     };
 
     async componentDidMount(){
-        const response=await fetch('http://localhost:8080/api/departments');
+        const response=await fetch('/api/departments');
         const body = await response.json();
         this.setState({Departments : body , isLoading: false});
     }
@@ -21,15 +20,26 @@ class Department extends Component {
         return (
 
             <div className={"col-6"}>
-                <AppNav />
+
                 <h2>Departments</h2>
                 {
                     Departments.map( department =>
                         <div id={department.id}>
-                            <div className={"col-md-5"}>
-                                {department.id} -> {department.name}
-                            </div>
 
+                            <table className="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">{department.id}</th>
+                                    <td>{department.name}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     )}
 
