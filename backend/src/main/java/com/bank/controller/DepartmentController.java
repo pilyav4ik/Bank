@@ -24,22 +24,22 @@ public class DepartmentController {
         return service.getAllDepartments();
     }
 
-    @GetMapping("department/{id}")
+    @GetMapping("departments/{id}")
     ResponseEntity<?> getDepartment(@PathVariable Long id){
         return service.getDepartmentById(id);
     }
 
-    @PostMapping("/department")
+    @PostMapping("/departments")
     ResponseEntity<Department> createDepartment(@Valid @RequestBody Department department) throws URISyntaxException{
         return service.createDepartment(department);
     }
 
-    @PutMapping("department/{id}")
+    @PutMapping("departments/{id}")
     ResponseEntity<Department> updateDepartment(@Valid @RequestBody Department department){
         return service.updateDepartment(department);
     }
 
-    @DeleteMapping("department/{id}")
+    @DeleteMapping("departments/{id}")
     ResponseEntity<?> deleteDepartment(@PathVariable Long id){
         return service.deleteDepartment(id);
     }
