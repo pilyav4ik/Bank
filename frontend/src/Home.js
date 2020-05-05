@@ -5,7 +5,7 @@ class Home extends Component{
     state = { };
 
     async componentDidMount(){
-        const response=await fetch('http://localhost:8080/api');
+        const response=await fetch('http://localhost:8080/api/departments');
         const body = await response.json();
         this.setState({Departments : body , isLoading: false});
     }
