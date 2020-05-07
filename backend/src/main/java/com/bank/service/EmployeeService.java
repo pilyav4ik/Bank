@@ -50,5 +50,8 @@ public class EmployeeService {
         return ResponseEntity.ok().build();
     }
 
+    public Collection<Employee> getEmployeesByDepartmentId(@PathVariable Department id){
+        return employeeRepository.findEmployeeByDepartment(id);
+    }
 
 }

@@ -10,4 +10,5 @@ import java.util.Collection;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
+    Collection<Employee> findEmployeeByDepartment(Department department);
 }

@@ -45,5 +45,9 @@ public class EmployeeController {
         return service.deleteEmployee(id);
     }
 
+    @GetMapping("/employees/department/{id}")
+    public Collection<Employee> getEmployeesByDepartmentId(@PathVariable Department id){
+        return service.getEmployeesByDepartmentId(id);
+    }
 
 }
