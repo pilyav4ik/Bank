@@ -1,5 +1,6 @@
 package com.bank.controller;
 
+import com.bank.model.Department;
 import com.bank.model.Employee;
 import com.bank.service.EmployeeService;
 import org.springframework.http.ResponseEntity;

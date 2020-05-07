@@ -1,5 +1,6 @@
 package com.bank.service;
 
+import com.bank.model.Department;
 import com.bank.model.Employee;
 import com.bank.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
