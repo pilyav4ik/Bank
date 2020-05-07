@@ -24,6 +24,7 @@ class Employees extends Component {
         const body=  await response.json();
         this.setState({Employees : body , isLoading :false});
     };
+    department;
 
     async handleSubmit(event){
         const item = this.state.item;
@@ -46,10 +47,10 @@ class Employees extends Component {
         const target= event.target;
         const value= target.value;
         const name = target.name;
-        const departmentId = target.departmentId;
+        const department = target.type;
         let item={...this.state.item};
         item[name] = value;
-        item[departmentId] = value;
+        item[department] = value;
         this.setState({item});
         //console.log(item);
     }
@@ -82,6 +83,7 @@ class Employees extends Component {
                 <tr key={employee.id}>
                     <td>{employee.id}</td>
                     <td>{employee.name}</td>
+                    <td>{employee.department.name}</td>
                     <td><Button size="sm" color="danger" onClick={() => this.remove(employee.id)}>Delete</Button></td>
 
                 </tr>);
@@ -123,6 +125,7 @@ class Employees extends Component {
                         <tr>
                             <th width={"5%"}>ID</th>
                             <th>Name</th>
+                            <th>Department</th>
                             <th width="10%">Action</th>
                         </tr>
                         </thead>
