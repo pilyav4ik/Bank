@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Entity
-@Data
 @Table(name="employee")
 public class Employee {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

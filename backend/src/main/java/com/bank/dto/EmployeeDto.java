@@ -11,5 +11,5 @@ public class EmployeeDto {
 
     private Long id;
     private String name;
-    private DepartmentDto departmentDto;
+    private Long departmentId;
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -24,7 +24,7 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Employee> getAllEmployees(){
+    public Collection<Employee> getAllEmployees(){
         return employeeRepository.findAll();
     }
 

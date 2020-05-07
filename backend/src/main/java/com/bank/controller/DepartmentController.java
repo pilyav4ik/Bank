@@ -20,11 +20,11 @@ public class DepartmentController {
     }
 
     @GetMapping("/departments")
-    Collection<Department> departments(){
+    public Collection<Department> departments(){
         return service.getAllDepartments();
     }
 
-    @GetMapping("departments/{id}")
+    @GetMapping("/departments/{id}")
     ResponseEntity<?> getDepartment(@PathVariable Long id){
         return service.getDepartmentById(id);
     }
@@ -34,12 +34,12 @@ public class DepartmentController {
         return service.createDepartment(department);
     }
 
-    @PutMapping("departments/{id}")
+    @PutMapping("/departments/{id}")
     ResponseEntity<Department> updateDepartment(@Valid @RequestBody Department department){
         return service.updateDepartment(department);
     }
 
-    @DeleteMapping("departments/{id}")
+    @DeleteMapping("/departments/{id}")
     ResponseEntity<?> deleteDepartment(@PathVariable Long id){
         return service.deleteDepartment(id);
     }
