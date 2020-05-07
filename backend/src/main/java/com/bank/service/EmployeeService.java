@@ -1,5 +1,6 @@
 package com.bank.service;
 
+import com.bank.model.Department;
 import com.bank.model.Employee;
 import com.bank.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,7 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Employee> getAllEmployees(){
+    public Collection<Employee> getAllEmployees(){
         return employeeRepository.findAll();
     }
 
@@ -49,5 +50,8 @@ public class EmployeeService {
         return ResponseEntity.ok().build();
     }
 
+    public Collection<Employee> getEmployeesByDepartmentId(@PathVariable Department id){
+        return employeeRepository.findEmployeeByDepartment(id);
+    }
 
 }
