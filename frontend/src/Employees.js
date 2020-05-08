@@ -3,6 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import './App.css';
 import { Table,Container,Input,Button,Label, FormGroup, Form} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import Departments from "./Departments";
 
 class Employees extends Component {
 
@@ -24,7 +25,6 @@ class Employees extends Component {
         const body=  await response.json();
         this.setState({Employees : body , isLoading :false});
     };
-    department;
 
     async handleSubmit(event){
         const item = this.state.item;
@@ -47,10 +47,10 @@ class Employees extends Component {
         const target= event.target;
         const value= target.value;
         const name = target.name;
-        const department = target.type;
+        const departmentName = target.type;
         let item={...this.state.item};
         item[name] = value;
-        item[department] = value;
+        item[departmentName] = value;
         this.setState({item});
         //console.log(item);
     }
@@ -83,7 +83,7 @@ class Employees extends Component {
                 <tr key={employee.id}>
                     <td>{employee.id}</td>
                     <td>{employee.name}</td>
-                    <td>{employee.department.name}</td>
+                    <td>{employee.department.departmentName}</td>
                     <td><Button size="sm" color="danger" onClick={() => this.remove(employee.id)}>Delete</Button></td>
 
                 </tr>);

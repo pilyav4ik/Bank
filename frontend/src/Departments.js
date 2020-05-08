@@ -4,7 +4,7 @@ import './App.css';
 import { Table,Container,Input,Button,Label, FormGroup, Form} from 'reactstrap';
 import {Link} from 'react-router-dom';
 
-class Departments extends Component {
+export class Departments extends Component {
 
     constructor(props){
         super(props);
@@ -45,9 +45,9 @@ class Departments extends Component {
     handleChange(event){
         const target= event.target;
         const value= target.value;
-        const name = target.name;
+        const departmentName = target.value();
         let item={...this.state.item};
-        item[name] = value;
+        item[departmentName] = value;
         this.setState({item});
         //console.log(item);
     }
@@ -79,7 +79,7 @@ class Departments extends Component {
             Departments.map( department =>
                 <tr key={department.id}>
                     <td>{department.id}</td>
-                    <td>{department.name}</td>
+                    <td>{department.departmentName}</td>
                     <td><Button size="sm" color="danger" onClick={() => this.remove(department.id)}>Delete</Button></td>
 
                 </tr>);
