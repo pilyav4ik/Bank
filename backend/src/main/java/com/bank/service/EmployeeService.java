@@ -54,4 +54,11 @@ public class EmployeeService {
         return employeeRepository.findEmployeeByDepartment(id);
     }
 
+    public Collection<Employee> getSortedEmployeesBySalary(){
+        return employeeRepository.sortEmployeeBySalaryAsc();
+    }
+
+    public Collection<Employee> getSortedEmployeesBySalaryDesc(){
+        return employeeRepository.sortEmployeeBySalaryDesc();
+    }
 }
