@@ -11,7 +11,8 @@ class Employees extends Component {
         super(props);
         this.state = {
             isLoading :true,
-            Employees : []
+            Employees : [],
+            Departments : []
         };
 
         this.handleSubmit= this.handleSubmit.bind(this);
@@ -23,7 +24,11 @@ class Employees extends Component {
     componentDidMount = async () => {
         const response= await fetch('/api/employees');
         const body=  await response.json();
-        this.setState({Employees : body , isLoading :false});
+
+
+        const responseDep= await fetch('/api/departments');
+        const bodyDep=  await responseDep.json();
+        this.setState({Employees : body, Departments : bodyDep , isLoading :false});
     };
 
     async handleSubmit(event){
@@ -73,7 +78,7 @@ class Employees extends Component {
 
     render() {
         const title =<h3>Add Employee</h3>;
-        const {Employees,isLoading} = this.state;
+        const {Employees, Departments,isLoading} = this.state;
 
         if (isLoading)
             return(<div>Loading....</div>);
@@ -88,6 +93,9 @@ class Employees extends Component {
 
                 </tr>);
 
+        let departmentSelect = Departments.map(department =>
+            <option key={department.departmentName}>{department.departmentName}</option>);
+
 
         return (
             <div>
@@ -97,10 +105,7 @@ class Employees extends Component {
                     <Form onSubmit={this.handleSubmit} >
                         <FormGroup>
                             <Label for="department_id">Department</Label>
-                            <select name="department_id" id="department_id" value={this.state.department} onChange={this.handleChange}>
-                                <option value={"1"}>development</option>
-                                <option value={"2"}>test</option>
-                            </select>
+                            <select>{departmentSelect}</select>
                         </FormGroup>
                         <FormGroup>
                             <Label for="name">Employee name</Label>
