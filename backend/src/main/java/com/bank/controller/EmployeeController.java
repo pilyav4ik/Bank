@@ -50,12 +50,4 @@ public class EmployeeController {
         return service.getEmployeesByDepartmentId(id);
     }
 
-    @GetMapping("/employees/sortedbysalary=asc")
-    public Collection<Employee> getSortedEmployeesBySalary(){
-        return service.getSortedEmployeesBySalary();
-    }
-    @GetMapping("/employees/sortedbysalary=desc")
-    public Collection<Employee> getSortedEmployeesBySalaryDesc(){
-        return service.getSortedEmployeesBySalaryDesc();
-    }
 }

@@ -3,7 +3,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import './App.css';
 import { Table,Container,Input,Button,Label, FormGroup, Form} from 'reactstrap';
 import {Link} from 'react-router-dom';
-import Departments from "./Departments";
+import { Tabs, TabList, Tab, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
 class Employees extends Component {
 
@@ -12,11 +13,13 @@ class Employees extends Component {
         this.state = {
             isLoading :true,
             Employees : [],
-            Departments : []
+            Departments : [],
+            tabIndex: 0
         };
 
         this.handleSubmit= this.handleSubmit.bind(this);
         this.handleChange= this.handleChange.bind(this);
+        this.handleClick= this.handleClick.bind(this);
 
     }
 
@@ -53,13 +56,20 @@ class Employees extends Component {
         const value= target.value;
         const name = target.name;
         const departmentName = target.type;
+        const salary = target.type;
         let item={...this.state.item};
         item[name] = value;
         item[departmentName] = value;
+        item[salary] = salary;
         this.setState({item});
         //console.log(item);
     }
 
+    handleClick(){
+        this.setState(state => ({
+            isToggleOn: !state.isToggleOn
+        }));
+    }
 
     async remove(id){
         await fetch(`/api/employees/${id}` , {
@@ -83,19 +93,71 @@ class Employees extends Component {
         if (isLoading)
             return(<div>Loading....</div>);
 
-        let rows=
-            Employees.map( employee =>
-                <tr key={employee.id}>
-                    <td>{employee.id}</td>
-                    <td>{employee.name}</td>
-                    <td>{employee.department.departmentName}</td>
-                    <td><Button size="sm" color="danger" onClick={() => this.remove(employee.id)}>Delete</Button></td>
-
-                </tr>);
 
         let departmentSelect = Departments.map(department =>
             <option key={department.departmentName}>{department.departmentName}</option>);
 
+        const unsorted =
+                Employees.map( employee =>
+                    <tr key={employee.id}>
+                        <td>{employee.id}</td>
+                        <td>{employee.name}</td>
+                        <td>{employee.department.departmentName}</td>
+                        <td>{employee.salary}</td>
+                        <td><Button size="sm" color="danger" onClick={() => this.remove(employee.id)}>Delete</Button></td>
+
+                    </tr>);
+
+
+        const sortBySalary = Employees.sort((a, b) => (a.salary > b.salary) ?  1 : -1).map( employee =>
+                <tr key={employee.id}>
+                    <td>{employee.id}</td>
+                    <td>{employee.name}</td>
+                    <td>{employee.department.departmentName}</td>
+                    <td>{employee.salary}</td>
+                    <td><Button size="sm" color="danger" onClick={() => this.remove(employee.id)}>Delete</Button></td>
+
+                </tr>);
+
+        const component = (
+            <Tabs>
+                <TabList>
+                    <Tab>Unsorted</Tab>
+                    <Tab>Sort by salary</Tab>
+                </TabList>
+
+                <TabPanel>
+                    <table  class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Salary</th>
+                    </tr>
+                    </thead>
+                    <tbody>{unsorted}</tbody>
+                    </table>
+                </TabPanel>
+
+                <TabPanel>
+                    <table  class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Salary</th>
+                        </tr>
+                        </thead>
+                        <tbody>{sortBySalary}</tbody>
+                    </table>
+                </TabPanel>
+
+
+            </Tabs>
+
+        );
 
         return (
             <div>
@@ -125,22 +187,9 @@ class Employees extends Component {
                 {''}
                 <Container>
                     <h3>Employees List</h3>
-                    <Table className="mt-4">
-                        <thead>
-                        <tr>
-                            <th width={"5%"}>ID</th>
-                            <th>Name</th>
-                            <th>Department</th>
-                            <th width="10%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {rows}
-                        </tbody>
-
-                    </Table>
+                    {component}
                 </Container>
-
+                {' '}
             </div>
 
         );
