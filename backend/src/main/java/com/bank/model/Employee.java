@@ -22,4 +22,6 @@ public class Employee {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "department_id")
     private Department department;
+
+    private double salary;
 }
