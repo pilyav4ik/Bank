@@ -1,6 +1,5 @@
 package com.bank.controller;
 
-import com.bank.model.Department;
 import com.bank.model.Employee;
 import com.bank.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    ResponseEntity<Employee> createEmployee(Long departmentId, @Valid @RequestBody Employee employee) throws URISyntaxException {
+    ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) throws URISyntaxException {
         return service.createEmployee(employee);
     }
 
@@ -45,9 +44,6 @@ public class EmployeeController {
         return service.deleteEmployee(id);
     }
 
-    @GetMapping("/employees/department/{id}")
-    public Collection<Employee> getEmployeesByDepartmentId(@PathVariable Department id){
-        return service.getEmployeesByDepartmentId(id);
-    }
+
 
 }

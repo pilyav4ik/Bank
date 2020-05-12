@@ -1,6 +1,5 @@
 package com.bank.service;
 
-import com.bank.model.Department;
 import com.bank.model.Employee;
 import com.bank.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +48,5 @@ public class EmployeeService {
         employeeRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
-
-    public Collection<Employee> getEmployeesByDepartmentId(@PathVariable Department id){
-        return employeeRepository.findEmployeeByDepartment(id);
-    }
-
 
 }
