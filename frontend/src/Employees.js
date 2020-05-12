@@ -104,7 +104,7 @@ class Employees extends Component {
             </form>
         );
         const unsorted =
-                Departments.map( employee =>
+            Employees.map( employee =>
                     <tr key={employee.id}>
                         <td>{employee.id}</td>
                         <td>{employee.name}</td>
