@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import './App.css';
-import { Table,Container,Input,Button,Label, FormGroup, Form} from 'reactstrap';
+import { Container,Button,FormGroup} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import { Tabs, TabList, Tab, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import  axios from  'axios';
+import {Col, Row} from "react-bootstrap";
 
 class Employees extends Component {
 
@@ -14,62 +16,46 @@ class Employees extends Component {
             isLoading :true,
             Employees : [],
             Departments : [],
+            name: '',
+            department_id: '',
+            departmentName: '',
+            salary: '',
             tabIndex: 0
         };
 
-        this.handleSubmit= this.handleSubmit.bind(this);
-        this.handleChange= this.handleChange.bind(this);
-        this.handleClick= this.handleClick.bind(this);
+
 
     }
 
+    changeHandler = e => {
+        this.setState({[e.target.name]: e.target.value})
+    };
 
     componentDidMount = async () => {
         const response= await fetch('/api/employees');
         const body=  await response.json();
-
 
         const responseDep= await fetch('/api/departments');
         const bodyDep=  await responseDep.json();
         this.setState({Employees : body, Departments : bodyDep , isLoading :false});
     };
 
-    async handleSubmit(event){
-        const item = this.state.item;
+    submitHandler(e) {
+        const {Employees, Departments, isLoading} = this.state;
+        const form = document.forms[0];
+        console.log(this.state);
+        axios.post(`/api/employees/${Departments.id}`, this.state)
+            .then(response => {
+                const{employees} = this.state;
+                console.log(response);
+                this.setState({employees});
+                form.reset();
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    };
 
-        await fetch(`/api/employees`, {
-            method : 'POST',
-            headers : {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body : JSON.stringify(item),
-        });
-
-        event.preventDefault();
-        this.setState({item: ''})
-    }
-
-
-    handleChange(event){
-        const target= event.target;
-        const value= target.value;
-        const name = target.name;
-        const departmentName = target.type;
-        const salary = target.type;
-        let item={...this.state.item};
-        item[name] = value;
-        item[departmentName] = value;
-        item[salary] = salary;
-        this.setState({item});
-        //console.log(item);
-    }
-
-    handleClick(){
-        this.setState(state => ({
-            isToggleOn: !state.isToggleOn
-        }));
-    }
 
     async remove(id){
         await fetch(`/api/employees/${id}` , {
@@ -88,21 +74,41 @@ class Employees extends Component {
 
     render() {
         const title =<h3>Add Employee</h3>;
-        const {Employees, Departments,isLoading} = this.state;
+        const {Employees, Departments, name, salary, departmentId, isLoading} = this.state;
 
         if (isLoading)
             return(<div>Loading....</div>);
 
 
         let departmentSelect = Departments.map(department =>
-            <option key={department.departmentName}>{department.departmentName}</option>);
+            <option key={department.id} value={departmentId}>{department.departmentName}</option>);
 
+
+        const formSubmitEmployee = (
+            <form onSubmit={this.submitHandler}>
+                <FormGroup className={"mb-2"}>
+                    <Row>
+                        <Col><select>{departmentSelect}</select></Col>
+                        <Col><input  type="text" placeholder={"name"}
+                                     name="name"
+                                     value={name}
+                                     onChange={this.changeHandler}/></Col>
+                        <Col><input  type="text" placeholder={"salary"}
+                                     name="salary"
+                                     value={salary}
+                                     onChange={this.changeHandler}/></Col>
+                        <Col><button type={'submit'}>Save</button>{' '}
+                            <Button className={"btn"} tag={Link} to="/">Cancel</Button></Col>
+                    </Row>
+                </FormGroup>
+            </form>
+        );
         const unsorted =
-                Employees.map( employee =>
+                Departments.map( employee =>
                     <tr key={employee.id}>
                         <td>{employee.id}</td>
                         <td>{employee.name}</td>
-                        <td>{employee.department.departmentName}</td>
+                        <td>{employee.department_id}</td>
                         <td>{employee.salary}</td>
                         <td><Button size="sm" color="danger" onClick={() => this.remove(employee.id)}>Delete</Button></td>
 
@@ -113,7 +119,7 @@ class Employees extends Component {
                 <tr key={employee.id}>
                     <td>{employee.id}</td>
                     <td>{employee.name}</td>
-                    <td>{employee.department.departmentName}</td>
+                    <td>{employee.department_id}</td>
                     <td>{employee.salary}</td>
                     <td><Button size="sm" color="danger" onClick={() => this.remove(employee.id)}>Delete</Button></td>
 
@@ -163,24 +169,7 @@ class Employees extends Component {
             <div>
                 <Container>
                     {title}
-
-                    <Form onSubmit={this.handleSubmit} >
-                        <FormGroup>
-                            <Label for="department_id">Department</Label>
-                            <select>{departmentSelect}</select>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="name">Employee name</Label>
-                            <Input type="text" name="name" id="name"
-                                   onChange={this.handleChange}/>
-
-                        </FormGroup>
-
-                        <FormGroup>
-                            <Button color="primary" type="submit">Save</Button>{' '}
-                            <Button color="secondary" tag={Link} to="/">Cancel</Button>
-                        </FormGroup>
-                    </Form>
+                    {formSubmitEmployee}
                 </Container>
 
 

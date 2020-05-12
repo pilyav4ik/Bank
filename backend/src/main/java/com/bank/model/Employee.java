@@ -18,10 +18,6 @@ public class Employee {
     private Long id;
 
     private String name;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "department_id")
-    private Department department;
-
+    private Long department_id;
     private double salary;
 }
