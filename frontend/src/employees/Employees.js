@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {EmployeeService} from './EmployeeService';
+import {DepartmentService} from "../departments/DepartmentService";
 import '../App.css';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -21,13 +22,18 @@ import 'primeicons/primeicons.css';
          super();
          this.state = {
              visible : false,
+             department : {
+                 departmentId: '',
+                 departmentName: '',
+             },
+             salary: '',
              employee: {
                  id: null,
                  name: null,
                  salary: null,
                  department_id: null
              },
-             selectedPersona : {
+             selectedEmployee : {
 
              }
          };
@@ -49,6 +55,7 @@ import 'primeicons/primeicons.css';
              }
          ];
          this.employeeService = new EmployeeService();
+         this.departmentService = new DepartmentService();
          this.save = this.save.bind(this);
          this.delete = this.delete.bind(this);
          this.footer = (
@@ -59,7 +66,8 @@ import 'primeicons/primeicons.css';
      }
 
      componentDidMount(){
-         this.employeeService.getAll().then(data => this.setState({employees: data}))
+         this.employeeService.getAll().then(data => this.setState({employees: data}));
+         this.departmentService.getAllDepartments().then(departmentList => this.setState({departments: departmentList}));
      }
 
      save() {
@@ -74,13 +82,14 @@ import 'primeicons/primeicons.css';
                  }
              });
              this.growl.show({severity: 'success', summary: 'Success!', detail: 'Text'});
-             this.employeeService.getAll().then(data => this.setState({employees: data}))
+             this.employeeService.getAll().then(data => this.setState({employees: data}));
+             this.departmentService.getAllDepartments().then(departmentList=> this.setState({departments: departmentList}));
          })
      }
 
      delete() {
          if(window.confirm("Confirm please")) {
-             this.employeeService.delete(this.state.selectedPersona.id).then(data => {
+             this.employeeService.delete(this.state.selectedEmployee.id).then(data => {
                  this.growl.show({severity: 'success', summary: 'Deleted!', detail: 'Text.'});
                  this.employeeService.getAll().then(data => this.setState({employees: data}));
              });
@@ -94,10 +103,10 @@ import 'primeicons/primeicons.css';
                  <br/>
                  <Panel header="React CRUD App">
                      <DataTable value={this.state.employees} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedEmployee} onSelectionChange={e => this.setState({selectedEmployee: e.value})}>
-                         <Column field="id" header="ID"></Column>
-                         <Column field="name" header="Name"></Column>
-                         <Column field="salary" header="Salary"></Column>
-                         <Column field="department_id" header="Department"></Column>
+                         <Column field="id" header="ID"/>
+                         <Column field="name" header="Name"/>
+                         <Column field="salary" header="Salary"/>
+                         <Column field="department_id" header="Department"/>
                      </DataTable>
                  </Panel>
                  <Dialog header="Crear employee" visible={this.state.visible} style={{width: '400px'}} footer={this.footer} modal={true} onHide={() => this.setState({visible: false})}>
@@ -129,7 +138,7 @@ import 'primeicons/primeicons.css';
               </span>
                          <br/>
                          <span className="p-float-label">
-                <InputText value={this.state.employee.department_id} style={{width : '100%'}} id="department_id" onChange={(e) => {
+                <InputText value={this.state.department_id} style={{width : '100%'}} id="department_id" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
@@ -139,6 +148,12 @@ import 'primeicons/primeicons.css';
                     })}
                 } />
                 <label htmlFor="department_id">Department</label>
+                             <select>
+                                 let departmentSet = map(Department.department =>
+            <option key={this.departmentService.getAllDepartments()}
+                    value={this.departmentService.department_id}>{this.departmentService.department_id}</option>);
+
+                             </select>
               </span>
                      </form>
                  </Dialog>

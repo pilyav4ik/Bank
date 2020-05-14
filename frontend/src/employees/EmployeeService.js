@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export class EmployeeService {
 
-    baseURL = "http://localhost:8080/api/employees/";
+    baseURL = "/api/employees";
     getAll(){
         return axios.get(this.baseURL).then(res => res.data);
     }

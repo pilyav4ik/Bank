@@ -2,8 +2,21 @@ import axios from "axios";
 
 export class DepartmentService {
 
-    baseURL = "http://localhost:8080/api/departments/";
-    getAll(){
+    baseURL = "/api/departments";
+    getAllDepartments(){
         return axios.get(this.baseURL).then(res => res.data);
+    }
+
+
+    save(department){
+        return axios.post(this.baseURL, department).then(res => res.data);
+    }
+
+    edit(id) {
+        return axios.post(this.baseURL + id).then(res => res.data);
+    }
+
+    delete(id) {
+        return axios.delete(this.baseURL + id).then(res => res.data);
     }
 }
