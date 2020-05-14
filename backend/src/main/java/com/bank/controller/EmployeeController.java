@@ -11,6 +11,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class EmployeeController {
 
     private final EmployeeService service;

@@ -2,10 +2,13 @@ import React, {Component} from 'react';
 import Home from "./Home";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Departments from "./Departments";
-import Employees from "./Employees";
+import Employees from "./employees/Employees";
 
-class App extends Component{
-  state = { };
+export class App extends Component{
+  constructor(){
+      super();
+      this.state = {};
+  }
   render() {
     return (
         <Router>
