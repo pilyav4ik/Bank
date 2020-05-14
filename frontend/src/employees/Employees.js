@@ -33,17 +33,17 @@ import 'primeicons/primeicons.css';
          };
          this.items = [
              {
-                 label : 'Nuevo',
+                 label : 'New',
                  icon  : 'pi pi-fw pi-plus',
                  command : () => {this.showSaveDialog()}
              },
              {
-                 label : 'Editar',
+                 label : 'Edit',
                  icon  : 'pi pi-fw pi-pencil',
                  command : () => {this.showEditDialog()}
              },
              {
-                 label : 'Eliminar',
+                 label : 'Delete',
                  icon  : 'pi pi-fw pi-trash',
                  command : () => {this.delete()}
              }
@@ -53,7 +53,7 @@ import 'primeicons/primeicons.css';
          this.delete = this.delete.bind(this);
          this.footer = (
              <div>
-                 <Button label="Guardar" icon="pi pi-check" onClick={this.save} />
+                 <Button label="Apply" icon="pi pi-check" onClick={this.save} />
              </div>
          );
      }
@@ -73,15 +73,15 @@ import 'primeicons/primeicons.css';
                      department_id: null
                  }
              });
-             this.growl.show({severity: 'success', summary: 'Atención!', detail: 'Se guardó el registro correctamente.'});
+             this.growl.show({severity: 'success', summary: 'Success!', detail: 'Text'});
              this.employeeService.getAll().then(data => this.setState({employees: data}))
          })
      }
 
      delete() {
-         if(window.confirm("¿Realmente desea eliminar el registro?")) {
+         if(window.confirm("Confirm please")) {
              this.employeeService.delete(this.state.selectedPersona.id).then(data => {
-                 this.growl.show({severity: 'success', summary: 'Atención!', detail: 'Se eliminó el registro correctamente.'});
+                 this.growl.show({severity: 'success', summary: 'Deleted!', detail: 'Text.'});
                  this.employeeService.getAll().then(data => this.setState({employees: data}));
              });
          }
@@ -95,9 +95,9 @@ import 'primeicons/primeicons.css';
                  <Panel header="React CRUD App">
                      <DataTable value={this.state.employees} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedEmployee} onSelectionChange={e => this.setState({selectedEmployee: e.value})}>
                          <Column field="id" header="ID"></Column>
-                         <Column field="name" header="Nombre"></Column>
-                         <Column field="salary" header="Apellido"></Column>
-                         <Column field="department_id" header="Direccion"></Column>
+                         <Column field="name" header="Name"></Column>
+                         <Column field="salary" header="Salary"></Column>
+                         <Column field="department_id" header="Department"></Column>
                      </DataTable>
                  </Panel>
                  <Dialog header="Crear employee" visible={this.state.visible} style={{width: '400px'}} footer={this.footer} modal={true} onHide={() => this.setState({visible: false})}>
@@ -112,7 +112,7 @@ import 'primeicons/primeicons.css';
                         return { employee };
                     })}
                 } />
-                <label htmlFor="name">Nombre</label>
+                <label htmlFor="name">Name</label>
               </span>
                          <br/>
                          <span className="p-float-label">
@@ -125,7 +125,7 @@ import 'primeicons/primeicons.css';
                         return { employee };
                     })}
                 } />
-                <label htmlFor="salary">Apellido</label>
+                <label htmlFor="salary">Salary</label>
               </span>
                          <br/>
                          <span className="p-float-label">
@@ -138,7 +138,7 @@ import 'primeicons/primeicons.css';
                         return { employee };
                     })}
                 } />
-                <label htmlFor="department_id">Dirección</label>
+                <label htmlFor="department_id">Department</label>
               </span>
                      </form>
                  </Dialog>
