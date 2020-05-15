@@ -56,6 +56,7 @@ class Departments extends Component {
                 <Button label="Apply" icon="pi pi-check" onClick={this.save} />
             </div>
         );
+        this.export = this.export.bind(this);
     }
 
     componentDidMount(){
@@ -85,13 +86,19 @@ class Departments extends Component {
         }
     }
 
+    export(){
+        this.dt.exportCSV();
+    }
+
     render(){
+        let header = <div style={{textAlign:'left'}}><Button type="button" icon="pi pi-external-link" iconPos="left" label="CSV" onClick={this.export}></Button></div>;
+
         return (
             <div style={{width:'80%', margin: '0 auto', marginTop: '20px'}}>
                 <Menubar model={this.items}/>
                 <br/>
                 <Panel header="React CRUD App">
-                    <DataTable value={this.state.departments} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedDepartment} onSelectionChange={e => this.setState({selectedDepartment: e.value})}>
+                    <DataTable value={this.state.departments} header={header} ref={(el) => { this.dt = el; }} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedDepartment} onSelectionChange={e => this.setState({selectedDepartment: e.value})}>
                         <Column field="id" header="ID"/>
                         <Column field="departmentName" header="Name"/>
                     </DataTable>

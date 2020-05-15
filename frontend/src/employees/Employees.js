@@ -22,11 +22,6 @@ import 'primeicons/primeicons.css';
          super();
          this.state = {
              visible : false,
-             department : {
-                 departmentId: '',
-                 departmentName: '',
-             },
-             salary: '',
              employee: {
                  id: null,
                  name: null,
@@ -63,6 +58,7 @@ import 'primeicons/primeicons.css';
                  <Button label="Apply" icon="pi pi-check" onClick={this.save} />
              </div>
          );
+         this.export = this.export.bind(this);
      }
 
      componentDidMount(){
@@ -83,7 +79,7 @@ import 'primeicons/primeicons.css';
              });
              this.growl.show({severity: 'success', summary: 'Success!', detail: 'Text'});
              this.employeeService.getAll().then(data => this.setState({employees: data}));
-             this.departmentService.getAllDepartments().then(departmentList=> this.setState({departments: departmentList}));
+             this.departmentService.getAllDepartments().then(depData=> this.setState({departments: depData}));
          })
      }
 
@@ -96,13 +92,19 @@ import 'primeicons/primeicons.css';
          }
      }
 
+     export(){
+         this.dt.exportCSV();
+     }
+
      render(){
+         let header = <div style={{textAlign:'left'}}><Button type="button" icon="pi pi-external-link" iconPos="left" label="CSV" onClick={this.export}></Button></div>;
+
          return (
              <div style={{width:'80%', margin: '0 auto', marginTop: '20px'}}>
                  <Menubar model={this.items}/>
                  <br/>
                  <Panel header="React CRUD App">
-                     <DataTable value={this.state.employees} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedEmployee} onSelectionChange={e => this.setState({selectedEmployee: e.value})}>
+                     <DataTable value={this.state.employees} header={header} ref={(el) => { this.dt = el; }} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedEmployee} onSelectionChange={e => this.setState({selectedEmployee: e.value})}>
                          <Column field="id" header="ID"/>
                          <Column field="name" header="Name"/>
                          <Column field="salary" header="Salary"/>
@@ -138,6 +140,9 @@ import 'primeicons/primeicons.css';
               </span>
                          <br/>
                          <span className="p-float-label">
+                             <select>
+                                 <option>{this.departmentService.getAllDepartments}</option>
+                             </select>
                 <InputText value={this.state.department_id} style={{width : '100%'}} id="department_id" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
@@ -148,12 +153,6 @@ import 'primeicons/primeicons.css';
                     })}
                 } />
                 <label htmlFor="department_id">Department</label>
-                             <select>
-                                 let departmentSet = map(Department.department =>
-            <option key={this.departmentService.getAllDepartments()}
-                    value={this.departmentService.department_id}>{this.departmentService.department_id}</option>);
-
-                             </select>
               </span>
                      </form>
                  </Dialog>
@@ -168,8 +167,7 @@ import 'primeicons/primeicons.css';
              employee : {
                  id: null,
                  name: null,
-                 salary: null,
-                 department_id: null
+                 salary: null
              }
          });
      }
