@@ -15,7 +15,6 @@ import {Growl} from 'primereact/growl';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import Employees from "./employees/Employees";
 
 
 class Departments extends Component {

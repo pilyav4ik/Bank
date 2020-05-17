@@ -26,7 +26,7 @@ import 'primeicons/primeicons.css';
                  id: null,
                  name: null,
                  salary: null,
-                 department_id: null
+                 departmentId: null
              },
              selectedEmployee : {
 
@@ -74,7 +74,7 @@ import 'primeicons/primeicons.css';
                      id: null,
                      name: null,
                      salary: null,
-                     department_id: null
+                     departmentId: null
                  }
              });
              this.growl.show({severity: 'success', summary: 'Success!', detail: 'Text'});
@@ -140,14 +140,11 @@ import 'primeicons/primeicons.css';
               </span>
                          <br/>
                          <span className="p-float-label">
-                             <select>
-                                 <option>{this.departmentService.getAllDepartments}</option>
-                             </select>
-                <InputText value={this.state.department_id} style={{width : '100%'}} id="department_id" onChange={(e) => {
+                <InputText value={this.state.employee.departmentId} style={{width : '100%'}} id="department_id" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
-                        employee.department_id = val
+                        employee.departmentId = val;
 
                         return { employee };
                     })}
@@ -167,7 +164,8 @@ import 'primeicons/primeicons.css';
              employee : {
                  id: null,
                  name: null,
-                 salary: null
+                 salary: null,
+                 departmentId: null
              }
          });
      }
@@ -179,7 +177,7 @@ import 'primeicons/primeicons.css';
                  id: this.state.selectedEmployee.id,
                  name: this.state.selectedEmployee.name,
                  salary: this.state.selectedEmployee.salary,
-                 department_id: this.state.selectedEmployee.department_id
+                 departmentId: this.state.selectedEmployee.departmentId
              }
          })
      }
