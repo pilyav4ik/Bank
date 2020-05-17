@@ -1,12 +1,12 @@
 package com.bank.controller;
 
+import com.bank.dto.DepartmentDto;
 import com.bank.model.Department;
 import com.bank.service.DepartmentService;
-import org.springframework.http.ResponseEntity;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URISyntaxException;
 import java.util.Collection;
 
 @RestController
@@ -14,9 +14,11 @@ import java.util.Collection;
 public class DepartmentController {
 
     private final DepartmentService service;
+    private final ModelMapper modelMapper;
 
-    public DepartmentController(DepartmentService service) {
+    public DepartmentController(DepartmentService service, ModelMapper modelMapper) {
         this.service = service;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/departments")
@@ -25,22 +27,22 @@ public class DepartmentController {
     }
 
     @GetMapping("/departments/{id}")
-    ResponseEntity<?> getDepartment(@PathVariable Long id){
-        return service.getDepartmentById(id);
+    public DepartmentDto getDepartment(@PathVariable Long id){
+        return modelMapper.map(service.getDepartmentById(id), DepartmentDto.class);
     }
 
     @PostMapping("/departments")
-    ResponseEntity<Department> createDepartment(@Valid @RequestBody Department department) throws URISyntaxException{
+    public  Department createDepartment(@RequestBody DepartmentDto department){
         return service.createDepartment(department);
     }
 
     @PutMapping("/departments/{id}")
-    ResponseEntity<Department> updateDepartment(@Valid @RequestBody Department department){
-        return service.updateDepartment(department);
+    public Department updateDepartment(@PathVariable Long id, @Valid @RequestBody DepartmentDto department){
+        return service.updateDepartment(id, department);
     }
 
     @DeleteMapping("/departments/{id}")
-    ResponseEntity<?> deleteDepartment(@PathVariable Long id){
-        return service.deleteDepartment(id);
+    public void deleteDepartment(@PathVariable Long id){
+        service.deleteDepartment(id);
     }
 }
