@@ -1,23 +1,24 @@
 package com.bank.controller;
 
+import com.bank.dto.EmployeeDto;
 import com.bank.model.Employee;
 import com.bank.service.EmployeeService;
-import org.springframework.http.ResponseEntity;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URISyntaxException;
 import java.util.Collection;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin("*")
 public class EmployeeController {
 
     private final EmployeeService service;
+    private final ModelMapper modelMapper;
 
-    public EmployeeController(EmployeeService service) {
+    public EmployeeController(EmployeeService service, ModelMapper modelMapper) {
         this.service = service;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/employees")
@@ -26,23 +27,23 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees/{id}")
-    ResponseEntity<?> getEmployee(@PathVariable Long id) {
-        return service.getEmployeeById(id);
+    public EmployeeDto getEmployee(@PathVariable Long id) {
+        return modelMapper.map(service.getEmployeeById(id), EmployeeDto.class);
     }
 
     @PostMapping("/employees")
-    ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) throws URISyntaxException {
+    public Employee createEmployee(@Valid @RequestBody EmployeeDto employee){
         return service.createEmployee(employee);
     }
 
     @PutMapping("/employees/{id}")
-    ResponseEntity<Employee> updateEmployee(@Valid @RequestBody Employee employee) {
-        return service.updateEmployee(employee);
+    public Employee updateEmployee(@PathVariable Long id, @Valid @RequestBody EmployeeDto employee) {
+        return service.updateEmployee(id, employee);
     }
 
     @DeleteMapping("/employees/{id}")
-    ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
-        return service.deleteEmployee(id);
+    public void deleteEmployee(@PathVariable Long id) {
+         service.deleteEmployee(id);
     }
 
 

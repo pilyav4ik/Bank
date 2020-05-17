@@ -15,6 +15,7 @@ import {Growl} from 'primereact/growl';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import Employees from "./employees/Employees";
 
 
 class Departments extends Component {
@@ -91,7 +92,7 @@ class Departments extends Component {
     }
 
     render(){
-        let header = <div style={{textAlign:'left'}}><Button type="button" icon="pi pi-external-link" iconPos="left" label="CSV" onClick={this.export}></Button></div>;
+        let header = <div style={{textAlign:'left'}}><Button type="button" icon="pi pi-external-link" iconPos="left" label="CSV" onClick={this.export}/></div>;
 
         return (
             <div style={{width:'80%', margin: '0 auto', marginTop: '20px'}}>

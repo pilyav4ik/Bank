@@ -4,7 +4,7 @@ export class DepartmentService {
 
     baseURL = "/api/departments";
     getAllDepartments(){
-        return axios.get(this.baseURL).then(res => res.data);
+        return axios.get(this.baseURL).then(res => res.data, count => count.length);
     }
 
 
