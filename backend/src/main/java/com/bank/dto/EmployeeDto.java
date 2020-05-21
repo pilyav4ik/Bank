@@ -11,6 +11,6 @@ public class EmployeeDto {
 
     private Long id;
     private String name;
-    private Long departmentId;
+    private Long department_id;
     private double salary;
 }

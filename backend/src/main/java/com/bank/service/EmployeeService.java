@@ -31,14 +31,14 @@ public class EmployeeService {
         Employee employee = new Employee();
         employee.setName(employeeDto.getName());
         employee.setSalary(employeeDto.getSalary());
-        employee.setDepartment_id(employeeDto.getDepartmentId());
+        employee.setDepartment_id(employeeDto.getDepartment_id());
         return employeeRepository.save(employee);
     }
 
     public Employee updateEmployee(Long id, EmployeeDto employeeDto){
         Employee employee = employeeRepository.getById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
         employee.setName(employeeDto.getName());
-        employee.setDepartment_id(employeeDto.getDepartmentId());
+        employee.setDepartment_id(employeeDto.getDepartment_id());
         employee.setSalary(employeeDto.getSalary());
         return employeeRepository.save(employee);
     }
