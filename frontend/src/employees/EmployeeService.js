@@ -12,10 +12,10 @@ export class EmployeeService {
     }
 
     edit(id) {
-        return axios.post(this.baseURL + id).then(res => res.data);
+        return axios.post(this.baseURL+"/"+ id).then(res => res.data);
     }
 
     delete(id) {
-        return axios.delete(this.baseURL + id).then(res => res.data);
+        return axios.delete(this.baseURL+"/" + id).then(res => res.data);
     }
 }

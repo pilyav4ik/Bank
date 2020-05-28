@@ -4,15 +4,13 @@ import com.bank.dto.EmployeeInformationDto;
 import com.bank.model.EmployeeInformation;
 import com.bank.service.EmployeeInformationService;
 import org.modelmapper.ModelMapper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/api/employees")
+@RequestMapping("/api/employees/info")
 public class EmployeeInformationController {
 
     private final EmployeeInformationService service;
@@ -22,12 +20,22 @@ public class EmployeeInformationController {
         this.service = service;
         this.modelMapper = modelMapper;
     }
-    @GetMapping("/all/info")
+    @GetMapping
     public Collection<EmployeeInformation> getAll(){ return service.getAll(); }
 
-    @GetMapping("/{id}/info")
+
+    @GetMapping("/{id}")
     public EmployeeInformationDto getEmployeeInformation(@PathVariable Long id) {
         return modelMapper.map(service.getEmployeeInformationById(id), EmployeeInformationDto.class);
+    }
+    @PostMapping()
+    public EmployeeInformation createEmployeeInformation(@Valid @RequestBody EmployeeInformationDto employeeInformationDto) {
+        return service.addEmployeeInformation(employeeInformationDto);
+    }
+
+    @PutMapping("/{id}")
+    public EmployeeInformation updateEmployeeInformation(@PathVariable Long id, @Valid @RequestBody EmployeeInformationDto employeeInformationDto){
+        return service.updateEmployeeInformation(id, employeeInformationDto);
     }
 
 }
