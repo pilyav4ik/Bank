@@ -101,6 +101,7 @@ class Departments extends Component {
                     <DataTable value={this.state.departments} header={header} ref={(el) => { this.dt = el; }} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedDepartment} onSelectionChange={e => this.setState({selectedDepartment: e.value})}>
                         <Column field="id" header="ID"/>
                         <Column field="departmentName" header="Name"/>
+                        <Column field={"employees.length"} header="Employees count"/>
                     </DataTable>
                 </Panel>
                 <Dialog header="Crear department" visible={this.state.visible} style={{width: '400px'}} footer={this.footer} modal={true} onHide={() => this.setState({visible: false})}>

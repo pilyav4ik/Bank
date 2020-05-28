@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {EmployeeService} from './EmployeeService';
-import {DepartmentService} from "../departments/DepartmentService";
 import '../App.css';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -15,6 +14,7 @@ import {Growl} from 'primereact/growl';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import {NavLink} from "react-bootstrap";
 
 
  class Employees extends Component{
@@ -22,11 +22,11 @@ import 'primeicons/primeicons.css';
          super();
          this.state = {
              visible : false,
-             employee: {
-                 id: null,
-                 name: null,
-                 salary: null,
-                 departmentId: null
+             employees: {
+                 id: '',
+                 name: '',
+                 salary: '',
+                 department_id: ''
              },
              selectedEmployee : {
 
@@ -50,7 +50,6 @@ import 'primeicons/primeicons.css';
              }
          ];
          this.employeeService = new EmployeeService();
-         this.departmentService = new DepartmentService();
          this.save = this.save.bind(this);
          this.delete = this.delete.bind(this);
          this.footer = (
@@ -63,7 +62,6 @@ import 'primeicons/primeicons.css';
 
      componentDidMount(){
          this.employeeService.getAll().then(data => this.setState({employees: data}));
-         this.departmentService.getAllDepartments().then(departmentList => this.setState({departments: departmentList}));
      }
 
      save() {
@@ -74,12 +72,11 @@ import 'primeicons/primeicons.css';
                      id: null,
                      name: null,
                      salary: null,
-                     departmentId: null
+                     department_id: null
                  }
              });
              this.growl.show({severity: 'success', summary: 'Success!', detail: 'Text'});
              this.employeeService.getAll().then(data => this.setState({employees: data}));
-             this.departmentService.getAllDepartments().then(depData=> this.setState({departments: depData}));
          })
      }
 
@@ -97,14 +94,17 @@ import 'primeicons/primeicons.css';
      }
 
      render(){
-         let header = <div style={{textAlign:'left'}}><Button type="button" icon="pi pi-external-link" iconPos="left" label="CSV" onClick={this.export}></Button></div>;
+         let header = <div style={{textAlign:'left'}}>
+             <Button type="button" icon="pi pi-external-link" iconPos="left" label="CSV" onClick={this.export}></Button>
+             <NavLink type={ "button"} className={"form-check form-check-inline"} href="/employees-info">More info</NavLink>
+         </div>;
 
          return (
              <div style={{width:'80%', margin: '0 auto', marginTop: '20px'}}>
                  <Menubar model={this.items}/>
                  <br/>
                  <Panel header="React CRUD App">
-                     <DataTable value={this.state.employees} header={header} ref={(el) => { this.dt = el; }} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedEmployee} onSelectionChange={e => this.setState({selectedEmployee: e.value})}>
+                     <DataTable value={this.state.employees} header={header} ref={(el) => { this.dt = el; }} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedEmployee.id} onSelectionChange={e => this.setState({selectedEmployee: e.value})}>
                          <Column field="id" header="ID"/>
                          <Column field="name" header="Name"/>
                          <Column field="salary" header="Salary"/>
@@ -114,7 +114,7 @@ import 'primeicons/primeicons.css';
                  <Dialog header="Crear employee" visible={this.state.visible} style={{width: '400px'}} footer={this.footer} modal={true} onHide={() => this.setState({visible: false})}>
                      <form id="employee-form">
               <span className="p-float-label">
-                <InputText value={this.state.employee.name} style={{width : '100%'}} id="name" onChange={(e) => {
+                <InputText value={this.state.employees.name} style={{width : '100%'}} id="name" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
@@ -127,7 +127,7 @@ import 'primeicons/primeicons.css';
               </span>
                          <br/>
                          <span className="p-float-label">
-                <InputText value={this.state.employee.salary} style={{width : '100%'}} id="salary" onChange={(e) => {
+                <InputText value={this.state.employees.salary} style={{width : '100%'}} id="salary" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
@@ -140,11 +140,11 @@ import 'primeicons/primeicons.css';
               </span>
                          <br/>
                          <span className="p-float-label">
-                <InputText value={this.state.employee.departmentId} style={{width : '100%'}} id="department_id" onChange={(e) => {
+                <InputText value={this.state.employees.department_id} style={{width : '100%'}} id="department_id" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
-                        employee.departmentId = val;
+                        employee.department_id = val;
 
                         return { employee };
                     })}
@@ -165,7 +165,7 @@ import 'primeicons/primeicons.css';
                  id: null,
                  name: null,
                  salary: null,
-                 departmentId: null
+                 department_id: null
              }
          });
      }
@@ -177,7 +177,7 @@ import 'primeicons/primeicons.css';
                  id: this.state.selectedEmployee.id,
                  name: this.state.selectedEmployee.name,
                  salary: this.state.selectedEmployee.salary,
-                 departmentId: this.state.selectedEmployee.departmentId
+                 department_id: this.state.selectedEmployee.department_id
              }
          })
      }

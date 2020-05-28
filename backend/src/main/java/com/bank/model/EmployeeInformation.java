@@ -12,13 +12,18 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name="employee")
-public class Employee {
+@Table(name="employee_information")
+public class EmployeeInformation{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "employee_id")
     private Long id;
 
-    private String name;
-    private Long department_id;
-    private double salary;
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @PrimaryKeyJoinColumn
+    private Employee employee;
+
+    private String city;
+    private String street;
+    private String bankName;
+    private String cardNumber;
+
 }
