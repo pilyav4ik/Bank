@@ -1,34 +1,42 @@
 import React, { Component } from 'react';
+
+import '../App.css';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import {Panel} from 'primereact/panel';
+import {Menubar} from 'primereact/menubar';
+import {Dialog} from 'primereact/dialog';
+import {InputText} from 'primereact/inputtext';
+import {Button} from 'primereact/button';
+import {Growl} from 'primereact/growl';
+
+
+import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+import {NavLink} from "react-bootstrap";
 import {EmployeeInfoService} from "./EmployeeInfoService";
-import {Panel} from "primereact/panel";
-import {DataTable} from "primereact/datatable";
-import {Column} from "primereact/column";
-import {Button} from "primereact/button";
-import {Dialog} from "primereact/dialog";
-import {InputText} from "primereact/inputtext";
-import {Growl} from "primereact/growl";
-import {Menubar} from "primereact/menubar";
+
 
 class EmployeeInfo extends Component{
-
-    constructor() {
+    constructor(){
         super();
         this.state = {
-            visible: false,
-            employeeInfo: {
-                id: '',
-                city: '',
-                street : '',
-                bankName : '',
-                cardNumber: '',
-                employee_id: ''
+            visible : false,
+            employee: {
+                id: null,
+                name: null,
+                salary: null,
+                department_id: null,
+                city: null,
+                street: null,
+                bankName: null,
+                cardNumber: null
             },
-            selectedEmployeeInfo : {
+            selectedEmployee : {
 
             }
-
         };
-
         this.items = [
             {
                 label : 'New',
@@ -46,134 +54,183 @@ class EmployeeInfo extends Component{
                 command : () => {this.delete()}
             }
         ];
-
         this.employeeInfoService = new EmployeeInfoService();
         this.save = this.save.bind(this);
+        this.delete = this.delete.bind(this);
         this.footer = (
             <div>
                 <Button label="Apply" icon="pi pi-check" onClick={this.save} />
             </div>
         );
+        this.export = this.export.bind(this);
     }
 
     componentDidMount(){
-        this.employeeInfoService.gatAll().then(dataAll => this.setState({employeeInfo : dataAll}));
+        this.employeeInfoService.getAll().then(data => this.setState({employees: data}));
     }
 
     save() {
-        this.employeeInfoService.save(this.state.employeeInfo).then(data => {
+        this.employeeInfoService.save(this.state.employee).then(data => {
             this.setState({
                 visible : false,
-                employeeInfo: {
+                employee: {
+                    id: null,
+                    name: null,
+                    salary: null,
+                    department_id: null,
                     city: null,
-                    street : null,
-                    bankName : null,
-                    cardNumber: null,
-                    employee_id: null
+                    street: null,
+                    bankName: null,
+                    cardNumber: null
                 }
             });
             this.growl.show({severity: 'success', summary: 'Success!', detail: 'Text'});
-            this.employeeInfoService.gatAll().then(dataAll => this.setState({employeeInfo : dataAll}));
-        })
-    }
-    update(){
-        this.employeeInfoService.update(this.state.employeeInfoService).then(data => {
-            this.setState({
-                visible: false,
-                employeeInfo: {
-                    employee: [],
-                    city: null,
-                    street : null,
-                    bankName : null,
-                    cardNumber: null
-
-                }
-            });
-            this.growl.show({severity: 'success', summary: "Success"});
             this.employeeInfoService.getAll().then(data => this.setState({employees: data}));
         })
     }
 
+    delete() {
+        this.employeeInfoService.delete(this.state.selectedEmployee.id).then(data => {
+            this.growl.show({severity: 'success', summary: 'Deleted!', detail: 'Text.'});
+            this.employeeInfoService.getAll().then(data => this.setState({employees: data}));
+        });
+    }
+
+    export(){
+        this.dt.exportCSV();
+    }
+
     render(){
-        return(
+        let header = <div style={{textAlign:'left'}}>
+            <Button type="button" icon="pi pi-external-link" iconPos="left" label="CSV" onClick={this.export}></Button>
+            <NavLink type={ "button"} className={"form-check form-check-inline"} href="/employees-info">More info</NavLink>
+        </div>;
+
+        return (
             <div style={{width:'80%', margin: '0 auto', marginTop: '20px'}}>
                 <Menubar model={this.items}/>
-            <Panel header="Employee full info">
-                <DataTable value={this.state.employeeInfo} selectionMode="single">
-                    <Column field="id" header="ID"/>
-                    <Column field="employee.name" header="name"/>
-                    <Column field="employee.salary" header="salary"/>
-                    <Column field="city" header="City"/>
-                    <Column field="street" header="street"/>
-                    <Column field="bankName" header="Bank"/>
-                    <Column field="cardNumber" header="Card number"/>
-                    <Column field="employee.department_id" header="Department"/>
-                </DataTable>
-            </Panel>
-
-
-                <Dialog header="Edit employee" visible={this.state.visible} style={{width: '400px'}} footer={this.footer} modal={true} onHide={() => this.setState({visible: false})}>
-                    <form id="employee-info-form">
-                           <span className="p-float-label">
-                <InputText value={this.state.employeeInfo.employee_id} style={{width : '100%'}} id="city" onChange={(e) => {
+                <br/>
+                {header}
+                <Panel header="React CRUD App">
+                    <DataTable value={this.state.employees} paginator={true} rows="25" selectionMode="single"
+                               selection={this.state.selectedEmployee}
+                               onSelectionChange={e => this.setState({selectedEmployee: e.value})}>
+                        <Column field="id" header="ID"/>
+                        <Column field="name" header="Name"/>
+                        <Column field="salary" header="Salary"/>
+                        <Column field="department_id" header="Department"/>
+                        <Column field="city" header="city"/>
+                        <Column field="street" header="Street"/>
+                        <Column field="bankName" header="Bank"/>
+                        <Column field="cardNumber" header="Card"/>
+                    </DataTable>
+                </Panel>
+                <Dialog header="Create Info" visible={this.state.visible}
+                        style={{width: '400px'}} footer={this.footer} modal={true}
+                        onHide={() => this.setState({visible: false})}>
+                    <form id="employee-form-form" onSubmit={this.employeeInfoService}>
+              <span className="p-float-label">
+                <InputText value={this.state.selectedEmployee.id} style={{width : '100%'}} onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
-                        let employee = Object.assign({}, prevState.employeeInfo);
-                        employee.employee_id = val;
+                        let employee = Object.assign({}, prevState.employee);
+                        employee.id = val;
 
-                        return { employeeInfo: employee };
+                        return { employee };
                     })}
                 } />
-                <label htmlFor="bankName">Employee id</label>
+                <label htmlFor="name">Name</label>
+              </span>
+                        <br/>
+
+                        <span className="p-float-label">
+                <InputText value={this.state.employee.name} style={{width : '100%'}} id="name" onChange={(e) => {
+                    let val = e.target.value;
+                    this.setState(prevState => {
+                        let employee = Object.assign({}, prevState.employee);
+                        employee.name = val;
+
+                        return { employee };
+                    })}
+                } />
+                <label htmlFor="name">Name</label>
               </span>
                         <br/>
                         <span className="p-float-label">
-                <InputText value={this.state.employeeInfo.city} style={{width : '100%'}} id="city" onChange={(e) => {
+                <InputText value={this.state.employee.salary} style={{width : '100%'}} id="salary" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
-                        let employee = Object.assign({}, prevState.employeeInfo);
+                        let employee = Object.assign({}, prevState.employee);
+                        employee.salary = val
+
+                        return { employee };
+                    })}
+                } />
+                <label htmlFor="salary">Salary</label>
+              </span>
+                        <br/>
+                        <span className="p-float-label">
+                <InputText value={this.state.employee.department_id} style={{width : '100%'}} id="department_id" onChange={(e) => {
+                    let val = e.target.value;
+                    this.setState(prevState => {
+                        let employee = Object.assign({}, prevState.employee);
+                        employee.department_id = val;
+
+                        return { employee };
+                    })}
+                } />
+                <label htmlFor="department_id">Department</label>
+              </span>
+
+                        <br/>
+                        <span className="p-float-label">
+                <InputText value={this.state.employee.city} style={{width : '100%'}} id="city" onChange={(e) => {
+                    let val = e.target.value;
+                    this.setState(prevState => {
+                        let employee = Object.assign({}, prevState.employee);
                         employee.city = val;
 
-                        return { employeeInfo: employee };
+                        return { employee };
                     })}
                 } />
-                <label htmlFor="bankName">City</label>
+                <label htmlFor="city">City</label>
               </span>
+
                         <br/>
                         <span className="p-float-label">
-                <InputText value={this.state.employeeInfo.street} style={{width : '100%'}} id="street" onChange={(e) => {
+                <InputText value={this.state.employee.street} style={{width : '100%'}} id="street" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
-                        let employee = Object.assign({}, prevState.employeeInfo);
+                        let employee = Object.assign({}, prevState.employee);
                         employee.street = val;
 
-                        return { employeeInfo: employee };
+                        return { employee };
                     })}
                 } />
                 <label htmlFor="street">Street</label>
               </span>
                         <br/>
                         <span className="p-float-label">
-                <InputText value={this.state.employeeInfo.bankName} style={{width : '100%'}} id="bank_name" onChange={(e) => {
+                <InputText value={this.state.employee.bankName} style={{width : '100%'}} id="bankName" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
-                        let employee = Object.assign({}, prevState.employeeInfo);
+                        let employee = Object.assign({}, prevState.employee);
                         employee.bankName = val;
 
-                        return { employeeInfo: employee };
+                        return { employee };
                     })}
                 } />
                 <label htmlFor="bankName">Bank</label>
               </span>
                         <br/>
                         <span className="p-float-label">
-                <InputText value={this.state.employeeInfo.cardNumber} style={{width : '100%'}} id="card_number" onChange={(e) => {
+                <InputText value={this.state.employee.cardNumber} style={{width : '100%'}} id="cardNumber" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
-                        let employee = Object.assign({}, prevState.employeeInfo);
+                        let employee = Object.assign({}, prevState.employee);
                         employee.cardNumber = val;
 
-                        return { employeeInfo: employee };
+                        return { employee };
                     })}
                 } />
                 <label htmlFor="cardNumber">Card number</label>
@@ -188,11 +245,14 @@ class EmployeeInfo extends Component{
     showSaveDialog(){
         this.setState({
             visible : true,
-            employeeInfo : {
-
+            employee : {
+                id: null,
+                name: null,
+                salary: null,
+                department_id: null,
                 city: null,
-                street : null,
-                bankName : null,
+                street: null,
+                bankName: null,
                 cardNumber: null
             }
         });
@@ -201,15 +261,17 @@ class EmployeeInfo extends Component{
     showEditDialog() {
         this.setState({
             visible : true,
-            employeeInfo : {
-
-                city: this.state.selectedEmployeeInfo.city,
-                street : this.state.selectedEmployeeInfo.street,
-                bankName : this.state.selectedEmployeeInfo.bankName,
-                cardNumber: this.state.selectedEmployeeInfo.cardNumber
+            employee : {
+                id: this.state.selectedEmployee.id,
+                name: this.state.selectedEmployee.name,
+                salary: this.state.selectedEmployee.salary,
+                department_id: this.state.selectedEmployee.department_id,
+                city: this.state.selectedEmployee.city,
+                street: this.state.selectedEmployee.name,
+                bankName: this.state.selectedEmployee.bankName,
+                cardNumber: this.state.selectedEmployee.cardNumber
             }
         })
     }
-
 }
 export default EmployeeInfo;

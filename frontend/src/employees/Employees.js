@@ -22,11 +22,11 @@ import {NavLink} from "react-bootstrap";
          super();
          this.state = {
              visible : false,
-             employees: {
-                 id: '',
-                 name: '',
-                 salary: '',
-                 department_id: ''
+             employee: {
+                 id: null,
+                 name: null,
+                 salary: null,
+                 department_id: null
              },
              selectedEmployee : {
 
@@ -81,12 +81,10 @@ import {NavLink} from "react-bootstrap";
      }
 
      delete() {
-         if(window.confirm("Confirm please")) {
              this.employeeService.delete(this.state.selectedEmployee.id).then(data => {
                  this.growl.show({severity: 'success', summary: 'Deleted!', detail: 'Text.'});
                  this.employeeService.getAll().then(data => this.setState({employees: data}));
              });
-         }
      }
 
      export(){
@@ -103,18 +101,38 @@ import {NavLink} from "react-bootstrap";
              <div style={{width:'80%', margin: '0 auto', marginTop: '20px'}}>
                  <Menubar model={this.items}/>
                  <br/>
+                 {header}
                  <Panel header="React CRUD App">
-                     <DataTable value={this.state.employees} header={header} ref={(el) => { this.dt = el; }} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedEmployee.id} onSelectionChange={e => this.setState({selectedEmployee: e.value})}>
+                     <DataTable value={this.state.employees} paginator={true} rows="25" selectionMode="single"
+                                selection={this.state.selectedEmployee}
+                                onSelectionChange={e => this.setState({selectedEmployee: e.value})}>
                          <Column field="id" header="ID"/>
                          <Column field="name" header="Name"/>
                          <Column field="salary" header="Salary"/>
                          <Column field="department_id" header="Department"/>
                      </DataTable>
                  </Panel>
-                 <Dialog header="Crear employee" visible={this.state.visible} style={{width: '400px'}} footer={this.footer} modal={true} onHide={() => this.setState({visible: false})}>
-                     <form id="employee-form">
+                 <Dialog header="Create employee" visible={this.state.visible}
+                         style={{width: '400px'}} footer={this.footer} modal={true}
+                         onHide={() => this.setState({visible: false})}>
+                     <form id="employee-form" onSubmit={this.employeeService}>
               <span className="p-float-label">
-                <InputText value={this.state.employees.name} style={{width : '100%'}} id="name" onChange={(e) => {
+                <InputText style={{width : '100%'}} hidden={true} value={this.state.selectedEmployee.id}
+                           onChange={(e) => {
+                    let val = e.target.value;
+                    this.setState(prevState => {
+                        let employee = Object.assign({}, prevState.employee);
+                        employee.id = val;
+
+                        return { employee };
+                    })}
+                } />
+                <label htmlFor="name">Name</label>
+              </span>
+                         <br/>
+
+              <span className="p-float-label">
+                <InputText value={this.state.employee.name} style={{width : '100%'}} onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
@@ -127,11 +145,12 @@ import {NavLink} from "react-bootstrap";
               </span>
                          <br/>
                          <span className="p-float-label">
-                <InputText value={this.state.employees.salary} style={{width : '100%'}} id="salary" onChange={(e) => {
+                <InputText value={this.state.employee.salary} style={{width : '100%'}}
+                           onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
-                        employee.salary = val
+                        employee.salary = val;
 
                         return { employee };
                     })}
@@ -140,7 +159,7 @@ import {NavLink} from "react-bootstrap";
               </span>
                          <br/>
                          <span className="p-float-label">
-                <InputText value={this.state.employees.department_id} style={{width : '100%'}} id="department_id" onChange={(e) => {
+                <InputText value={this.state.employee.department_id} style={{width : '100%'}} onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);

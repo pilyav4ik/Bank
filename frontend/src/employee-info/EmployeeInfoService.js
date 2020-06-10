@@ -2,20 +2,20 @@ import axios from "axios";
 
 export class EmployeeInfoService {
 
-    baseURL = "/api/employees/info";
+    baseURL = "/api/employees-add-info/";
+    getAllURL = "/api/employees/";
 
-    gatAll(){
-        return axios.get(this.baseURL).then(res => res.data);
-    }
-    get(id){
-        return axios.get(this.baseURL + id).then(res => res.data);
+    getAll(){
+        return axios.get(this.getAllURL).then(res => res.data);
     }
 
-    save(employeeInfo){
-        return axios.post(this.baseURL, employeeInfo).then(res => res.data);
-    }
 
-    edit(id) {
-        return axios.put(this.baseURL, id).then(res => res.data);
-    }
+    save = async (employee) => {
+        if (employee.id){
+            return axios.put(this.baseURL + `${employee.id}`, employee).then(res => res.data);
+        }else {
+            return axios.post(this.baseURL, employee).then(res => res.data);
+        }
+    };
+
 }
