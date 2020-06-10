@@ -41,6 +41,12 @@ public class EmployeeController {
         return service.updateEmployee(id, employee);
     }
 
+    @PutMapping("/employees-add-info/{id}")
+    public Employee updateEmployeeWithInfo(@PathVariable Long id,
+                                           @Valid @RequestBody EmployeeDto employeeWithInfo) {
+        return service.updateEmployeeWithInfo(id, employeeWithInfo);
+    }
+
     @DeleteMapping("/employees/{id}")
     public void deleteEmployee(@PathVariable Long id) {
          service.deleteEmployee(id);

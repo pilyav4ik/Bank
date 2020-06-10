@@ -69,6 +69,29 @@ public class EmployeeServiceTest extends AbstractTest {
     }
 
     @Test
+    public void addEmployeeInfo() throws Exception{
+        String uri = "/api/employees/3";
+        Employee employee = new Employee();
+        employee.setName("Sam");
+        employee.setSalary(1500);
+        employee.setDepartment_id(1L);
+
+        employee.setCity("Berlin");
+        employee.setStreet("Alexander Platz");
+        employee.setBankName("Sparkasse");
+        employee.setCardNumber("DE12345678912");
+        String inputJson = super.mapToJson(employee);
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(uri)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(inputJson)).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        assertEquals(employee.getBankName(), "Sparkasse");
+    }
+
+    @Test
     public void deleteEmployee() throws Exception{
         String uri = "/api/employees/1";
 

@@ -10,7 +10,12 @@ import lombok.NoArgsConstructor;
 public class EmployeeDto {
 
     private Long id;
+
     private String name;
     private Long department_id;
     private double salary;
+    private String city;
+    private String street;
+    private String bankName;
+    private String cardNumber;
 }

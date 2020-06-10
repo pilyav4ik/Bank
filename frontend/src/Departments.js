@@ -24,8 +24,8 @@ class Departments extends Component {
         this.state = {
             visible : false,
             department : {
-                departmentId: '',
-                departmentName: '',
+                id: null,
+                departmentName: null,
             },
             selectedDepartment : {
 
@@ -56,11 +56,10 @@ class Departments extends Component {
                 <Button label="Apply" icon="pi pi-check" onClick={this.save} />
             </div>
         );
-        this.export = this.export.bind(this);
     }
 
     componentDidMount(){
-        this.departmentService.getAllDepartments().then(departmentList => this.setState({departments: departmentList}));
+        this.departmentService.getAllDepartments().then(data => this.setState({departments: data}))
     }
 
     save() {
@@ -78,36 +77,46 @@ class Departments extends Component {
     }
 
     delete() {
-        if(window.confirm("Confirm please")) {
             this.departmentService.delete(this.state.selectedDepartment.id).then(data => {
                 this.growl.show({severity: 'success', summary: 'Deleted!', detail: 'Text.'});
-                this.departmentService.getAll().then(data => this.setState({departments: data}));
+                this.departmentService.getAllDepartments().then(data => this.setState({departments: data}));
             });
-        }
-    }
-
-    export(){
-        this.dt.exportCSV();
     }
 
     render(){
-        let header = <div style={{textAlign:'left'}}><Button type="button" icon="pi pi-external-link" iconPos="left" label="CSV" onClick={this.export}/></div>;
-
         return (
             <div style={{width:'80%', margin: '0 auto', marginTop: '20px'}}>
                 <Menubar model={this.items}/>
                 <br/>
                 <Panel header="React CRUD App">
-                    <DataTable value={this.state.departments} header={header} ref={(el) => { this.dt = el; }} paginator={true} rows="4" selectionMode="single" selection={this.state.selectedDepartment} onSelectionChange={e => this.setState({selectedDepartment: e.value})}>
+                    <DataTable value={this.state.departments} paginator={true} rows="25" selectionMode="single"
+                               selection={this.state.selectedDepartment}
+                               onSelectionChange={e => this.setState({selectedDepartment: e.value})}>
                         <Column field="id" header="ID"/>
-                        <Column field="departmentName" header="Name"/>
-                        <Column field={"employees.length"} header="Employees count"/>
+                        <Column field="departmentName" header="Department"/>
                     </DataTable>
                 </Panel>
-                <Dialog header="Crear department" visible={this.state.visible} style={{width: '400px'}} footer={this.footer} modal={true} onHide={() => this.setState({visible: false})}>
-                    <form id="department-form">
-              <span className="p-float-label">
-                <InputText value={this.state.department.departmentName} style={{width : '100%'}} id="departmentName" onChange={(e) => {
+                <Dialog header="Create department" visible={this.state.visible}
+                        style={{width: '400px'}} footer={this.footer} modal={true}
+                        onHide={() => this.setState({visible: false})}>
+                    <form id="department-form" onSubmit={this.departmentService}>
+
+                        <span className="p-float-label">
+                <InputText style={{width : '100%'}} hidden={true} value={this.state.selectedDepartment.id}
+                           onChange={(e) => {
+                    let val = e.target.value;
+                    this.setState(prevState => {
+                        let department = Object.assign({}, prevState.department);
+                        department.id = val;
+
+                        return { department };
+                    })}
+                } />
+                <label htmlFor="id">Department</label>
+              </span>
+                        <span className="p-float-label">
+                <InputText style={{width : '100%'}} value={this.state.department.departmentName}
+                           onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let department = Object.assign({}, prevState.department);
@@ -116,8 +125,9 @@ class Departments extends Component {
                         return { department };
                     })}
                 } />
-                <label htmlFor="departmentName">Name</label>
+                <label htmlFor="id">Department</label>
               </span>
+
                     </form>
                 </Dialog>
                 <Growl ref={(el) => this.growl = el} />
@@ -140,7 +150,7 @@ class Departments extends Component {
             visible : true,
             department : {
                 id: this.state.selectedDepartment.id,
-                departmentName: this.state.selectedDepartment.departmentName,
+                departmentName: this.state.selectedDepartment.departmentName
             }
         })
     }
