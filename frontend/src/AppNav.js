@@ -11,7 +11,7 @@ class AppNav extends Component{
                     <NavbarBrand href="/">Tracker App</NavbarBrand>
                         <Nav className="mr-auto" navbar>
                             <NavItem>
-                                <NavLink href="/home/">Home</NavLink>
+                                <NavLink href="/">Home</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink href="/departments/">Departments</NavLink>

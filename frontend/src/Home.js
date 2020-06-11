@@ -1,13 +1,11 @@
-import React, { Component } from "react";
 import AppNav from "./AppNav";
+import React, {Component} from "react";
 
-class Home extends Component{
-    state = { };
-
+class Home extends Component {
 
     render() {
         return(
-            <AppNav/>
+            "hello"
         );
     }
 }
