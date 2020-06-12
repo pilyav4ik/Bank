@@ -101,4 +101,27 @@ public class EmployeeServiceTest extends AbstractTest {
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
     }
+    @Test
+    public void sortBySalaryAsc() throws Exception {
+        String uri = "/api/employees=by-salary-asc";
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        String content = mvcResult.getResponse().getContentAsString();
+        Employee[] employees = super.mapFromJson(content, Employee[].class);
+        assertEquals(employees[0].getId(), 3L);
+
+    }
+
+    @Test
+    public void sortBySalaryDesc() throws Exception {
+        String uri = "/api/employees=by-salary-desc";
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        String content = mvcResult.getResponse().getContentAsString();
+        Employee[] employees = super.mapFromJson(content, Employee[].class);
+        assertEquals(employees[0].getId(), 2L);
+
+    }
 }

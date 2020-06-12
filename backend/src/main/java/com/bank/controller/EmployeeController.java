@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -53,5 +54,13 @@ public class EmployeeController {
     }
 
 
+    @GetMapping("/employees=by-salary-asc")
+    public List<Employee> employeesBySalaryAsc() {
+        return service.getAllEmployeesBySalaryAsc();
+    }
+    @GetMapping("/employees=by-salary-desc")
+    public List<Employee> employeesBySalaryDesc() {
+        return service.getAllEmployeesBySalaryDesc();
+    }
 
 }
