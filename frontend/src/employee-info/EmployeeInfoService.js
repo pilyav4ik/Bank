@@ -18,4 +18,13 @@ export class EmployeeInfoService {
         }
     };
 
+    async getAllEmployeesBySalaryAsc() {
+        let res = await axios.get("/api/employees=by-salary-asc");
+        return res.data;
+    }
+
+    async getAllEmployeesBySalaryDesc() {
+        let res = await axios.get("/api/employees=by-salary-desc");
+        return res.data;
+    }
 }

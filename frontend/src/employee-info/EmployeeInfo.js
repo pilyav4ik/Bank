@@ -57,6 +57,8 @@ class EmployeeInfo extends Component{
         this.employeeInfoService = new EmployeeInfoService();
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
+        this.getAllEmployeesBySalaryAsc = this.getAllEmployeesBySalaryAsc.bind(this);
+        this.getAllEmployeesBySalaryDesc = this.getAllEmployeesBySalaryDesc.bind(this);
         this.footer = (
             <div>
                 <Button label="Apply" icon="pi pi-check" onClick={this.save} />
@@ -96,6 +98,14 @@ class EmployeeInfo extends Component{
         });
     }
 
+
+    getAllEmployeesBySalaryAsc(){
+        this.employeeInfoService.getAllEmployeesBySalaryAsc().then(data =>  this.setState({employees: data}));
+    }
+    getAllEmployeesBySalaryDesc(){
+        this.employeeInfoService.getAllEmployeesBySalaryDesc().then(data =>  this.setState({employees: data}));
+    }
+
     export(){
         this.dt.exportCSV();
     }
@@ -106,11 +116,15 @@ class EmployeeInfo extends Component{
             <NavLink type={ "button"} className={"form-check form-check-inline"} href="/employees-info">More info</NavLink>
         </div>;
 
+        let sortBySalaryAsc = <a onClick={this.getAllEmployeesBySalaryAsc}><i className="pi pi-sort-up"/></a>;
+        let sortBySalaryDesc = <a  onClick={this.getAllEmployeesBySalaryDesc}><i className="pi pi-sort-down"/></a>;
+
         return (
             <div style={{width:'80%', margin: '0 auto', marginTop: '20px'}}>
                 <Menubar model={this.items}/>
                 <br/>
                 {header}
+                Sort list by salary: {sortBySalaryAsc} {sortBySalaryDesc}
                 <Panel header="React CRUD App">
                     <DataTable value={this.state.employees} paginator={true} rows="25" selectionMode="single"
                                selection={this.state.selectedEmployee}

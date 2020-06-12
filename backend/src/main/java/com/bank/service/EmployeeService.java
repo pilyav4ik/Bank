@@ -5,10 +5,13 @@ import com.bank.exceptions.EmployeeNotFoundException;
 import com.bank.model.Employee;
 import com.bank.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class EmployeeService {
@@ -21,6 +24,15 @@ public class EmployeeService {
 
     public Collection<Employee> getAllEmployees(){
         return employeeRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Employee> getAllEmployeesBySalaryAsc(){
+        return employeeRepository.findAll(Sort.by("salary").ascending());
+    }
+    @Transactional(readOnly = true)
+    public List<Employee> getAllEmployeesBySalaryDesc(){
+        return employeeRepository.findAll(Sort.by("salary").descending());
     }
 
     public Employee getEmployeeById(@PathVariable Long id){
