@@ -115,7 +115,7 @@ class Departments extends Component {
                 <label htmlFor="id">Department</label>
               </span>
                         <span className="p-float-label">
-                <InputText style={{width : '100%'}} value={this.state.department.departmentName}
+                <InputText style={{width : '100%'}} id={"department"} value={this.state.department.departmentName}
                            onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
@@ -130,7 +130,7 @@ class Departments extends Component {
 
                     </form>
                 </Dialog>
-                <Growl ref={(el) => this.growl = el} />
+                <Growl ref={(el) => this.growl = el}  showDetail="true" sticky="true" />
             </div>
         );
     }
