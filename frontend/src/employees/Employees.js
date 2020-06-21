@@ -141,12 +141,11 @@ import {NavLink} from "react-bootstrap";
                         return { employee };
                     })}
                 } />
-                <label htmlFor="name">Name</label>
               </span>
                          <br/>
 
               <span className="p-float-label">
-                <InputText value={this.state.employee.name} style={{width : '100%'}} onChange={(e) => {
+                <InputText id={"name"} value={this.state.employee.name} style={{width : '100%'}} onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
@@ -159,7 +158,7 @@ import {NavLink} from "react-bootstrap";
               </span>
                          <br/>
                          <span className="p-float-label">
-                <InputText value={this.state.employee.salary} style={{width : '100%'}}
+                <InputText id={"salary"} value={this.state.employee.salary} style={{width : '100%'}}
                            onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
@@ -173,7 +172,7 @@ import {NavLink} from "react-bootstrap";
               </span>
                          <br/>
                          <span className="p-float-label">
-                <InputText value={this.state.employee.department_id} style={{width : '100%'}} onChange={(e) => {
+                <InputText id={"department"} value={this.state.employee.department_id} style={{width : '100%'}} onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
