@@ -7,6 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -123,5 +126,37 @@ public class EmployeeServiceTest extends AbstractTest {
         Employee[] employees = super.mapFromJson(content, Employee[].class);
         assertEquals(employees[0].getId(), 2L);
 
+    }
+
+    @Test
+    public void saveListEmployees() throws Exception {
+        String uri = "/api/employees/save-all";
+        Employee employee1 = new Employee();
+        employee1.setDepartment_id(1L);
+        employee1.setSalary(200);
+        employee1.setName("Tomas First");
+        employee1.setCity("Berlin");
+        employee1.setStreet("Street first");
+        Employee employee2 = new Employee();
+        employee2.setDepartment_id(1L);
+        employee2.setSalary(200);
+        employee2.setName("Max Second");
+        employee2.setCity("Berlin");
+        employee2.setStreet("Street second");
+
+        List<Employee> employeeList = new ArrayList<>();
+        employeeList.add(employee1);
+        employeeList.add(employee2);
+
+        String inputJson = super.mapToJson(employeeList);
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(inputJson)).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        assertEquals(employee1.getName(), "Tomas First");
+        assertEquals(employee2.getName(), "Max Second");
     }
 }

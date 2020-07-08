@@ -63,4 +63,8 @@ public class EmployeeController {
         return service.getAllEmployeesBySalaryDesc();
     }
 
+    @PostMapping("/employees/save-all")
+    public List<Employee> saveListEmployees(@Valid @RequestBody List<Employee> employee){
+        return service.saveListEmployees(employee);
+    }
 }

@@ -72,4 +72,8 @@ public class EmployeeService {
         employeeRepository.deleteById(id);
     }
 
+    @Transactional
+    public List<Employee> saveListEmployees(Iterable<Employee> employeeListDto) {
+        return employeeRepository.saveAll(employeeListDto);
+    }
 }
