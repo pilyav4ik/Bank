@@ -35,6 +35,26 @@ public class EmployeeService {
         return employeeRepository.findAll(Sort.by("salary").descending());
     }
 
+    @Transactional(readOnly = true)
+    public List<Employee> getEmployeesByDepartment(@PathVariable Long department_id){
+        return employeeRepository.findAllByDepartmentId(department_id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Employee> getEmployeesByStreet(@PathVariable String street){
+        return employeeRepository.findAllByStreet(street);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Employee> getEmployeesBySalary(@PathVariable double salary){
+        return employeeRepository.findAllBySalary(salary);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Employee> getEmployeesByBank(@PathVariable String bankName){
+        return employeeRepository.findAllByBankName(bankName);
+    }
+
     public Employee getEmployeeById(@PathVariable Long id){
         return employeeRepository.getOne(id);
     }
@@ -43,14 +63,14 @@ public class EmployeeService {
         Employee employee = new Employee();
         employee.setName(employeeDto.getName());
         employee.setSalary(employeeDto.getSalary());
-        employee.setDepartment_id(employeeDto.getDepartment_id());
+        employee.setDepartmentId(employeeDto.getDepartment_id());
         return employeeRepository.save(employee);
     }
 
     public Employee updateEmployee(Long id, EmployeeDto employeeDto){
         Employee employee = employeeRepository.getById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
         employee.setName(employeeDto.getName());
-        employee.setDepartment_id(employeeDto.getDepartment_id());
+        employee.setDepartmentId(employeeDto.getDepartment_id());
         employee.setSalary(employeeDto.getSalary());
         return employeeRepository.save(employee);
     }
@@ -58,7 +78,7 @@ public class EmployeeService {
     public Employee updateEmployeeWithInfo(Long id, EmployeeDto employeeDto){
         Employee employee = employeeRepository.getById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
         employee.setName(employeeDto.getName());
-        employee.setDepartment_id(employeeDto.getDepartment_id());
+        employee.setDepartmentId(employeeDto.getDepartment_id());
         employee.setSalary(employeeDto.getSalary());
 
         employee.setCity(employeeDto.getCity());
@@ -72,7 +92,7 @@ public class EmployeeService {
         employeeRepository.deleteById(id);
     }
 
-    @Transactional
+
     public List<Employee> saveListEmployees(Iterable<Employee> employeeListDto) {
         return employeeRepository.saveAll(employeeListDto);
     }

@@ -63,6 +63,25 @@ public class EmployeeController {
         return service.getAllEmployeesBySalaryDesc();
     }
 
+    @GetMapping("/employees/department={departmentId}")
+    public List<Employee> employeesByDepartment(@PathVariable Long departmentId){
+        return service.getEmployeesByDepartment(departmentId);
+    }
+    @GetMapping("/employees/street={street}")
+    public List<Employee> employeesByStreet(@PathVariable String street){
+        return service.getEmployeesByStreet(street);
+    }
+
+    @GetMapping("/employees/salary={salary}")
+    public List<Employee> employeesBySalary(@PathVariable double salary){
+        return service.getEmployeesBySalary(salary);
+    }
+
+    @GetMapping("/employees/bank={bankName}")
+    public List<Employee> employeesByBank(@PathVariable String bankName){
+        return service.getEmployeesByBank(bankName);
+    }
+
     @PostMapping("/employees/save-all")
     public List<Employee> saveListEmployees(@Valid @RequestBody List<Employee> employee){
         return service.saveListEmployees(employee);
