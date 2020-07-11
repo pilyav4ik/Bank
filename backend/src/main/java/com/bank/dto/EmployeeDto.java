@@ -12,7 +12,7 @@ public class EmployeeDto {
     private Long id;
 
     private String name;
-    private Long department_id;
+    private Long departmentId;
     private double salary;
     private String city;
     private String street;
