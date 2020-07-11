@@ -63,14 +63,14 @@ public class EmployeeService {
         Employee employee = new Employee();
         employee.setName(employeeDto.getName());
         employee.setSalary(employeeDto.getSalary());
-        employee.setDepartmentId(employeeDto.getDepartment_id());
+        employee.setDepartmentId(employeeDto.getDepartmentId());
         return employeeRepository.save(employee);
     }
 
     public Employee updateEmployee(Long id, EmployeeDto employeeDto){
         Employee employee = employeeRepository.getById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
         employee.setName(employeeDto.getName());
-        employee.setDepartmentId(employeeDto.getDepartment_id());
+        employee.setDepartmentId(employeeDto.getDepartmentId());
         employee.setSalary(employeeDto.getSalary());
         return employeeRepository.save(employee);
     }
@@ -78,7 +78,7 @@ public class EmployeeService {
     public Employee updateEmployeeWithInfo(Long id, EmployeeDto employeeDto){
         Employee employee = employeeRepository.getById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
         employee.setName(employeeDto.getName());
-        employee.setDepartmentId(employeeDto.getDepartment_id());
+        employee.setDepartmentId(employeeDto.getDepartmentId());
         employee.setSalary(employeeDto.getSalary());
 
         employee.setCity(employeeDto.getCity());
