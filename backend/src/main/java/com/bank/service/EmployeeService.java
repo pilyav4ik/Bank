@@ -3,9 +3,13 @@ package com.bank.service;
 import com.bank.dto.EmployeeDto;
 import com.bank.exceptions.EmployeeNotFoundException;
 import com.bank.model.Employee;
+import com.bank.repository.EmployeePaginationRepository;
 import com.bank.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,16 +22,22 @@ import java.util.List;
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final EmployeePaginationRepository employeePaginationRepository;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, ModelMapper modelMapper) {
+    public EmployeeService(EmployeeRepository employeeRepository, ModelMapper modelMapper, EmployeePaginationRepository employeePaginationRepository) {
         this.employeeRepository = employeeRepository;
+        this.employeePaginationRepository = employeePaginationRepository;
     }
 
     public Collection<Employee> getAllEmployees(){
         return employeeRepository.findAll();
     }
 
+    public Page<Employee> getAllEmployeesByPage(int pageNumber, int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        return employeePaginationRepository.findAll(pageable);
+    }
     @Transactional(readOnly = true)
     public List<Employee> getAllEmployeesBySalaryAsc(){
         return employeeRepository.findAll(Sort.by("salary").ascending());

@@ -5,6 +5,8 @@ import com.bank.model.Employee;
 import com.bank.service.EmployeeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,6 +20,11 @@ public class EmployeeController {
     private final EmployeeService service;
     private final ModelMapper modelMapper;
 
+    private static final int BUTTONS_TO_SHOW = 5;
+    private static final int INITIAL_PAGE = 0;
+    private static final int INITIAL_PAGE_SIZE = 5;
+    private static final int[] PAGE_SIZES = {5, 10, 20};
+
     @Autowired
     public EmployeeController(EmployeeService service, ModelMapper modelMapper) {
         this.service = service;
@@ -30,6 +37,19 @@ public class EmployeeController {
                 .stream()
                 .map(e -> modelMapper.map(e, EmployeeDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/employees-page={pageNo}&size={pageSize}")
+    public List<Employee> employeesPaging (Model model, @PathVariable int pageNo,
+                                           @PathVariable int pageSize){
+        Page<Employee> page = service.getAllEmployeesByPage(pageNo,pageSize);
+        List<Employee> employeeList = page.getContent();
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("employeeList", employeeList);
+
+        return employeeList;
     }
 
     @GetMapping("/employees/{id}")
