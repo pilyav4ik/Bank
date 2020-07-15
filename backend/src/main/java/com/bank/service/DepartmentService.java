@@ -1,6 +1,5 @@
 package com.bank.service;
 
-import com.bank.dto.DepartmentDto;
 import com.bank.exceptions.DepartmentNotFoundException;
 import com.bank.model.Department;
 import com.bank.repository.DepartmentRepository;
@@ -27,13 +26,11 @@ public class DepartmentService {
         return departmentRepository.getOne(id);
     }
 
-    public Department createDepartment(DepartmentDto departmentDto){
-        Department department = new Department();
-        department.setDepartmentName(departmentDto.getDepartmentName());
+    public Department createDepartment(Department department){
         return departmentRepository.save(department);
     }
 
-    public Department updateDepartment(Long id, DepartmentDto departmentDto){
+    public Department updateDepartment(Long id, Department departmentDto){
         Department department = departmentRepository.getById(id).orElseThrow(() -> new DepartmentNotFoundException(id));
         department.setDepartmentName(departmentDto.getDepartmentName());
         return departmentRepository.save(department);

@@ -4,12 +4,14 @@ import com.bank.dto.EmployeeDto;
 import com.bank.exceptions.EmployeeNotFoundException;
 import com.bank.model.Employee;
 import com.bank.repository.EmployeeRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, ModelMapper modelMapper) {
         this.employeeRepository = employeeRepository;
     }
 
@@ -59,11 +61,7 @@ public class EmployeeService {
         return employeeRepository.getOne(id);
     }
 
-    public Employee createEmployee(EmployeeDto employeeDto){
-        Employee employee = new Employee();
-        employee.setName(employeeDto.getName());
-        employee.setSalary(employeeDto.getSalary());
-        employee.setDepartmentId(employeeDto.getDepartmentId());
+    public Employee createEmployee(Employee employee){
         return employeeRepository.save(employee);
     }
 
@@ -93,7 +91,15 @@ public class EmployeeService {
     }
 
 
-    public List<Employee> saveListEmployees(Iterable<Employee> employeeListDto) {
-        return employeeRepository.saveAll(employeeListDto);
+    public List<Employee> saveListEmployeesService(Iterable<EmployeeDto> employeeList) {
+        List<Employee> newEmployeesList = new ArrayList<>();
+        for (EmployeeDto employeeDto : employeeList){
+            Employee employee = new Employee();
+            employee.setName(employeeDto.getName());
+            employee.setDepartmentId(employeeDto.getDepartmentId());
+            employee.setSalary(employeeDto.getSalary());
+            newEmployeesList.add(employee);
+        }
+        return employeeRepository.saveAll(newEmployeesList);
     }
 }

@@ -32,13 +32,18 @@ public class DepartmentController {
     }
 
     @PostMapping("/departments")
-    public  Department createDepartment(@RequestBody DepartmentDto department){
-        return service.createDepartment(department);
+    public  DepartmentDto createDepartment(@Valid @RequestBody DepartmentDto departmentDto){
+        Department department = new Department();
+        department.setDepartmentName(departmentDto.getDepartmentName());
+        Department departmentEntity = modelMapper.map(departmentDto, Department.class);
+        return modelMapper.map(service.createDepartment(departmentEntity), DepartmentDto.class);
     }
 
     @PutMapping("/departments/{id}")
-    public Department updateDepartment(@PathVariable Long id, @Valid @RequestBody DepartmentDto department){
-        return service.updateDepartment(id, department);
+    public DepartmentDto updateDepartment(@PathVariable Long id, @Valid @RequestBody DepartmentDto departmentDto){
+        Department department = new Department();
+        department.setDepartmentName(departmentDto.getDepartmentName());
+        return modelMapper.map(service.updateDepartment(id, department), DepartmentDto.class);
     }
 
     @DeleteMapping("/departments/{id}")

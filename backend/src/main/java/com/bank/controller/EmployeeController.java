@@ -4,11 +4,12 @@ import com.bank.dto.EmployeeDto;
 import com.bank.model.Employee;
 import com.bank.service.EmployeeService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -17,14 +18,18 @@ public class EmployeeController {
     private final EmployeeService service;
     private final ModelMapper modelMapper;
 
+    @Autowired
     public EmployeeController(EmployeeService service, ModelMapper modelMapper) {
         this.service = service;
         this.modelMapper = modelMapper;
     }
 
     @GetMapping("/employees")
-    public Collection<Employee> employees() {
-        return service.getAllEmployees();
+    public List<EmployeeDto> employees() {
+        return service.getAllEmployees()
+                .stream()
+                .map(e -> modelMapper.map(e, EmployeeDto.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/employees/{id}")
@@ -33,8 +38,13 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    public Employee createEmployee(@Valid @RequestBody EmployeeDto employee){
-        return service.createEmployee(employee);
+    public EmployeeDto createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
+        Employee employee = new Employee();
+        employee.setName(employeeDto.getName());
+        employee.setDepartmentId(employeeDto.getDepartmentId());
+        employee.setSalary(employeeDto.getSalary());
+        Employee employeeEntity = modelMapper.map(employeeDto, Employee.class);
+        return modelMapper.map(service.createEmployee(employeeEntity), EmployeeDto.class);
     }
 
     @PutMapping("/employees/{id}")
@@ -50,7 +60,7 @@ public class EmployeeController {
 
     @DeleteMapping("/employees/{id}")
     public void deleteEmployee(@PathVariable Long id) {
-         service.deleteEmployee(id);
+        service.deleteEmployee(id);
     }
 
 
@@ -58,32 +68,35 @@ public class EmployeeController {
     public List<Employee> employeesBySalaryAsc() {
         return service.getAllEmployeesBySalaryAsc();
     }
+
     @GetMapping("/employees=by-salary-desc")
     public List<Employee> employeesBySalaryDesc() {
         return service.getAllEmployeesBySalaryDesc();
     }
 
     @GetMapping("/employees/department={departmentId}")
-    public List<Employee> employeesByDepartment(@PathVariable Long departmentId){
+    public List<Employee> employeesByDepartment(@PathVariable Long departmentId) {
         return service.getEmployeesByDepartment(departmentId);
     }
+
     @GetMapping("/employees/street={street}")
-    public List<Employee> employeesByStreet(@PathVariable String street){
+    public List<Employee> employeesByStreet(@PathVariable String street) {
         return service.getEmployeesByStreet(street);
     }
 
     @GetMapping("/employees/salary={salary}")
-    public List<Employee> employeesBySalary(@PathVariable double salary){
+    public List<Employee> employeesBySalary(@PathVariable double salary) {
         return service.getEmployeesBySalary(salary);
     }
 
     @GetMapping("/employees/bank={bankName}")
-    public List<Employee> employeesByBank(@PathVariable String bankName){
+    public List<Employee> employeesByBank(@PathVariable String bankName) {
         return service.getEmployeesByBank(bankName);
     }
 
     @PostMapping("/employees/save-all")
-    public List<Employee> saveListEmployees(@Valid @RequestBody List<Employee> employee){
-        return service.saveListEmployees(employee);
+    public List<Employee> saveListEmployees(@Valid @RequestBody List<EmployeeDto> employeeDtoList) {
+        return service.saveListEmployeesService(employeeDtoList);
+
     }
 }
