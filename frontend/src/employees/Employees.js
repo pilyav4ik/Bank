@@ -26,7 +26,7 @@ import {NavLink} from "react-bootstrap";
                  id: null,
                  name: null,
                  salary: null,
-                 department_id: null
+                 departmentId: null
              },
              selectedEmployee : {
 
@@ -74,7 +74,7 @@ import {NavLink} from "react-bootstrap";
                      id: null,
                      name: null,
                      salary: null,
-                     department_id: null
+                     departmentId: null
                  }
              });
              this.growl.show({severity: 'success', summary: 'Success!', detail: 'Text'});
@@ -123,7 +123,7 @@ import {NavLink} from "react-bootstrap";
                          <Column field="id" header="ID"/>
                          <Column field="name" header="Name"/>
                          <Column field="salary" header="Salary"/>
-                         <Column field="department_id" header="Department"/>
+                         <Column field="departmentId" header="Department"/>
                      </DataTable>
                  </Panel>
                  <Dialog header="Create employee" visible={this.state.visible}
@@ -172,16 +172,16 @@ import {NavLink} from "react-bootstrap";
               </span>
                          <br/>
                          <span className="p-float-label">
-                <InputText id={"department"} value={this.state.employee.department_id} style={{width : '100%'}} onChange={(e) => {
+                <InputText id={"department"} value={this.state.employee.departmentId} style={{width : '100%'}} onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
-                        employee.department_id = val;
+                        employee.departmentId = val;
 
                         return { employee };
                     })}
                 } />
-                <label htmlFor="department_id">Department</label>
+                <label htmlFor="departmentId">Department</label>
               </span>
                      </form>
                  </Dialog>
@@ -197,7 +197,7 @@ import {NavLink} from "react-bootstrap";
                  id: null,
                  name: null,
                  salary: null,
-                 department_id: null
+                 departmentId: null
              }
          });
      }
@@ -209,7 +209,7 @@ import {NavLink} from "react-bootstrap";
                  id: this.state.selectedEmployee.id,
                  name: this.state.selectedEmployee.name,
                  salary: this.state.selectedEmployee.salary,
-                 department_id: this.state.selectedEmployee.department_id
+                 departmentId: this.state.selectedEmployee.departmentId
              }
          })
      }
