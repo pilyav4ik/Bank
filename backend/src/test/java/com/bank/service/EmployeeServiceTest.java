@@ -38,7 +38,7 @@ public class EmployeeServiceTest extends AbstractTest {
     public void saveEmployee() throws Exception {
         String uri = "/api/employees/";
         Employee employee = new Employee();
-        employee.setDepartment_id(1L);
+        employee.setDepartmentId(1L);
         employee.setSalary(200);
         employee.setName("Tomas T");
         String inputJson = super.mapToJson(employee);
@@ -58,7 +58,7 @@ public class EmployeeServiceTest extends AbstractTest {
         Employee employee = new Employee();
         employee.setName("Sam");
         employee.setSalary(1500);
-        employee.setDepartment_id(1L);
+        employee.setDepartmentId(1L);
 
         String inputJson = super.mapToJson(employee);
 
@@ -77,7 +77,7 @@ public class EmployeeServiceTest extends AbstractTest {
         Employee employee = new Employee();
         employee.setName("Sam");
         employee.setSalary(1500);
-        employee.setDepartment_id(1L);
+        employee.setDepartmentId(1L);
 
         employee.setCity("Berlin");
         employee.setStreet("Alexander Platz");
@@ -132,13 +132,13 @@ public class EmployeeServiceTest extends AbstractTest {
     public void saveListEmployees() throws Exception {
         String uri = "/api/employees/save-all";
         Employee employee1 = new Employee();
-        employee1.setDepartment_id(1L);
+        employee1.setDepartmentId(1L);
         employee1.setSalary(200);
         employee1.setName("Tomas First");
         employee1.setCity("Berlin");
         employee1.setStreet("Street first");
         Employee employee2 = new Employee();
-        employee2.setDepartment_id(1L);
+        employee2.setDepartmentId(1L);
         employee2.setSalary(200);
         employee2.setName("Max Second");
         employee2.setCity("Berlin");
