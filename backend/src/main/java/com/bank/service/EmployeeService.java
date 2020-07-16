@@ -8,7 +8,6 @@ import com.bank.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -34,8 +33,7 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Page<Employee> getAllEmployeesByPage(int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+    public Page<Employee> getAllEmployeesByPage(Pageable pageable){
         return employeePaginationRepository.findAll(pageable);
     }
     @Transactional(readOnly = true)
