@@ -6,7 +6,7 @@ import com.bank.service.EmployeeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.ui.Model;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,17 +39,9 @@ public class EmployeeController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/employees-page={pageNo}&size={pageSize}")
-    public List<Employee> employeesPaging (Model model, @PathVariable int pageNo,
-                                           @PathVariable int pageSize){
-        Page<Employee> page = service.getAllEmployeesByPage(pageNo,pageSize);
-        List<Employee> employeeList = page.getContent();
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("employeeList", employeeList);
-
-        return employeeList;
+    @GetMapping("/employees-page")
+    public Page<Employee> employeesPaging (Pageable pageable){
+        return service.getAllEmployeesByPage(pageable);
     }
 
     @GetMapping("/employees/{id}")
