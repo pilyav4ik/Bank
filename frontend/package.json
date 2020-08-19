@@ -13,6 +13,7 @@
     "moment-timezone": "^0.5.28",
     "primeicons": "^3.0.0-rc.1",
     "primereact": "^4.2.1",
+    "prop-types": "latest",
     "react": "^16.13.1",
     "react-bootstrap": "latest",
     "react-datepicker": "^2.14.1",
@@ -20,10 +21,9 @@
     "react-moment": "^0.9.7",
     "react-router": "latest",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.3",
     "react-transition-group": "^4.4.1",
-    "reactstrap": "^6.5.0",
-    "prop-types": "latest"
+    "reactstrap": "^6.5.0"
   },
   "scripts": {
     "start": "react-scripts start",

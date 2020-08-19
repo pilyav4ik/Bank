@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import './App.css';
-import {DepartmentService} from "./departments/DepartmentService";
+import '../App.css';
+import {DepartmentService} from "./DepartmentService";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import {Panel} from 'primereact/panel';
@@ -94,6 +94,7 @@ class Departments extends Component {
                                onSelectionChange={e => this.setState({selectedDepartment: e.value})}>
                         <Column field="id" header="ID"/>
                         <Column field="departmentName" header="Department"/>
+                        <Column field="employees.length" header="Employees by Department"/>
                     </DataTable>
                 </Panel>
                 <Dialog header="Create department" visible={this.state.visible}

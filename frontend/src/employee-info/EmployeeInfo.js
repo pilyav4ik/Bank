@@ -27,7 +27,7 @@ class EmployeeInfo extends Component{
                 id: null,
                 name: null,
                 salary: null,
-                department_id: null,
+                departmentId: null,
                 city: null,
                 street: null,
                 bankName: null,
@@ -79,7 +79,7 @@ class EmployeeInfo extends Component{
                     id: null,
                     name: null,
                     salary: null,
-                    department_id: null,
+                    departmentId: null,
                     city: null,
                     street: null,
                     bankName: null,
@@ -132,7 +132,7 @@ class EmployeeInfo extends Component{
                         <Column field="id" header="ID"/>
                         <Column field="name" header="Name"/>
                         <Column field="salary" header="Salary"/>
-                        <Column field="department_id" header="Department"/>
+                        <Column field="departmentId" header="Department"/>
                         <Column field="city" header="city"/>
                         <Column field="street" header="Street"/>
                         <Column field="bankName" header="Bank"/>
@@ -184,16 +184,16 @@ class EmployeeInfo extends Component{
               </span>
                         <br/>
                         <span className="p-float-label">
-                <InputText value={this.state.employee.department_id} style={{width : '100%'}} id="department_id" onChange={(e) => {
+                <InputText value={this.state.employee.departmentId} style={{width : '100%'}} id="departmentId" onChange={(e) => {
                     let val = e.target.value;
                     this.setState(prevState => {
                         let employee = Object.assign({}, prevState.employee);
-                        employee.department_id = val;
+                        employee.departmentId = val;
 
                         return { employee };
                     })}
                 } />
-                <label htmlFor="department_id">Department</label>
+                <label htmlFor="departmentId">Department</label>
               </span>
 
                         <br/>
