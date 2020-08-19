@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Home from "./Home";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Departments from "./Departments";
+import Departments from "./departments/Departments";
 import Employees from "./employees/Employees";
 import EmployeeInfo from "./employee-info/EmployeeInfo";
 
