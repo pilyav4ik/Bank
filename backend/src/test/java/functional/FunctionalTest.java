@@ -13,7 +13,7 @@ public class FunctionalTest {
 
     @BeforeClass
     public static void setUp() {
-        System.setProperty("webdriver.chrome.driver", "src/test/java/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "src/test/java/chromedriver/chromedriver86.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);

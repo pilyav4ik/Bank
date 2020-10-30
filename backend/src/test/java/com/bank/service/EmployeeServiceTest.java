@@ -1,20 +1,28 @@
 package com.bank.service;
 
 import com.bank.dto.EmployeeDto;
+import com.bank.mappers.EmployeeMapper;
 import com.bank.model.Employee;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 public class EmployeeServiceTest extends AbstractTest {
 
@@ -24,8 +32,11 @@ public class EmployeeServiceTest extends AbstractTest {
         super.setUp();
     }
 
-    @MockBean
+    @Autowired
     private EmployeeService service;
+    @Autowired
+    private EmployeeMapper employeeMapper;
+    MvcResult mvcResult;
 
     @Test
     public void getEmployeesList() throws Exception {
@@ -48,50 +59,44 @@ public class EmployeeServiceTest extends AbstractTest {
                 "Test Name",
                 1L,
                 2000.00,
-                "Berlin", "Berlinerstr. 21",
-                "Sparkasse","DE123456789023");
-        Employee savedEmployeeEntity = new Employee(
-                76L,
-                "Test Name",
-                1L,
-                2000.00,
-                "Berlin", "Berlinerstr. 21",
-                "Sparkasse","DE123456789023");
-        when(service.createEmployee(employeeDto)).thenReturn(savedEmployeeEntity);
+                "Berlin",
+                "Berlinerstr. 21",
+                "Sparkasse",
+                "DE123456789023");
 
+        String inputJson = super.mapToJson(employeeDto);
 
-        /*Employee employee = new Employee();
-        employee.setDepartmentId(1L);
-        employee.setSalary(200);
-        employee.setName("Tomas T");
-        String inputJson = super.mapToJson(employee);
-
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
+        mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
-        assertEquals(employee.getName(), "Tomas T");*/
+        assertEquals(employeeMapper.dtoToEntity(employeeDto).getName(), "Test Name");
     }
 
     @Test
-    public void updateEmployee() throws Exception{
-        String uri = "/api/employees/1";
-        Employee employee = new Employee();
-        employee.setName("Sam");
-        employee.setSalary(1500);
-        employee.setDepartmentId(1L);
+    public void updateEmployee() throws Exception {
+        String uri = "/api/employees/22";
+        EmployeeDto employeeDto = new EmployeeDto(
+                null,
+                "New Test Name",
+                17L,
+                2000.00,
+                "Berlin",
+                "Berlinerstr. 21",
+                "Sparkasse",
+                "DE123456789023");
 
-        String inputJson = super.mapToJson(employee);
+        String inputJson = super.mapToJson(employeeDto);
 
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(uri)
+        mvcResult = mvc.perform(MockMvcRequestBuilders.put(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
-        assertEquals(employee.getName(), "Sam");
+        assertEquals(employeeMapper.dtoToEntity(employeeDto).getName(), "New Test Name");
     }
 
     @Test
@@ -173,7 +178,7 @@ public class EmployeeServiceTest extends AbstractTest {
 
         String inputJson = super.mapToJson(employeeList);
 
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
+        MvcResult mvcResult = mvc.perform(post(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
 
@@ -181,5 +186,21 @@ public class EmployeeServiceTest extends AbstractTest {
         assertEquals(200, status);
         assertEquals(employee1.getName(), "Tomas First");
         assertEquals(employee2.getName(), "Max Second");
+    }
+
+
+    @Test
+    public void saveEmployeesFromCSV() throws Exception {
+        String uri = "/api/employees/upload-csv-file";
+
+        byte[] fileContent = "employees2".getBytes(StandardCharsets.UTF_8);
+        MockMultipartFile filePart1 = new MockMultipartFile("file", "orig", null, fileContent);
+
+        standaloneSetup(new EmployeeServiceTest()).build()
+                .perform(multipart(uri).file(filePart1))
+                .andExpect(status().isFound())
+                .andExpect(model().attribute("fileContent", fileContent))
+                .andExpect(model().attribute("jsonContent", Collections.singletonMap("name", "yeeeah")));
+
     }
 }

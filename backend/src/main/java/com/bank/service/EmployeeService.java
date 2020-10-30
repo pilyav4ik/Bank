@@ -75,7 +75,7 @@ public class EmployeeService {
         return employeeRepository.findAllByBankName(bankName);
     }
 
-    public Employee getEmployeeById(@PathVariable Long id){
+    public Employee getEmployeeById(Long id){
         return employeeRepository.getOne(id);
     }
 
