@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -19,11 +18,6 @@ public class EmployeeController {
 
     private final EmployeeService service;
     private final ModelMapper modelMapper;
-
-    private static final int BUTTONS_TO_SHOW = 5;
-    private static final int INITIAL_PAGE = 0;
-    private static final int INITIAL_PAGE_SIZE = 5;
-    private static final int[] PAGE_SIZES = {5, 10, 20};
 
     @Autowired
     public EmployeeController(EmployeeService service, ModelMapper modelMapper) {
@@ -33,10 +27,7 @@ public class EmployeeController {
 
     @GetMapping("/employees")
     public List<EmployeeDto> employees() {
-        return service.getAllEmployees()
-                .stream()
-                .map(e -> modelMapper.map(e, EmployeeDto.class))
-                .collect(Collectors.toList());
+        return service.getAllEmployees();
     }
 
     @GetMapping("/employees-page")
@@ -51,12 +42,7 @@ public class EmployeeController {
 
     @PostMapping("/employees")
     public EmployeeDto createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
-        Employee employee = new Employee();
-        employee.setName(employeeDto.getName());
-        employee.setDepartmentId(employeeDto.getDepartmentId());
-        employee.setSalary(employeeDto.getSalary());
-        Employee employeeEntity = modelMapper.map(employeeDto, Employee.class);
-        return modelMapper.map(service.createEmployee(employeeEntity), EmployeeDto.class);
+        return service.createEmployee(employeeDto);
     }
 
     @PutMapping("/employees/{id}")

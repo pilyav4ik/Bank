@@ -2,12 +2,14 @@ package com.bank.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeDto {
+@EqualsAndHashCode(callSuper = true)
+public class EmployeeDto extends AbstractDto{
 
     private Long id;
 

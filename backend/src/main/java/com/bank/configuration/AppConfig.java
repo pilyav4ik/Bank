@@ -1,6 +1,7 @@
 package com.bank.configuration;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +18,12 @@ public class AppConfig {
 
         @Bean
         public ModelMapper modelMapper() {
-            ModelMapper modelMapper = new ModelMapper();
-            return modelMapper;
+            ModelMapper mapper = new ModelMapper();
+            mapper.getConfiguration()
+                    .setMatchingStrategy(MatchingStrategies.STRICT)
+                    .setFieldMatchingEnabled(true)
+                    .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PUBLIC);
+            return mapper;
         }
 
     @Bean
