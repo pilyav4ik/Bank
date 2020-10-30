@@ -20,15 +20,15 @@ public class EmployeeTest extends FunctionalTest {
         WebElement buttonNew = driver.findElement(By.className("p-menuitem-text"));
         buttonNew.click();
 
-        elements = driver.findElements(By.tagName("form"));
+        elements = driver.findElements(By.id("employee-form"));
         for (WebElement element : elements) {
             element.findElement(By.id("name")).sendKeys("Max");
             element.findElement(By.id("salary")).sendKeys("2500");
-            element.findElement(By.id("department")).sendKeys("25");
+            element.findElement(By.id("department")).sendKeys("1");
         }
-        driver.findElement(By.cssSelector("body .p-dialog .p-dialog-footer button")).click();
-        Thread.sleep(3000);
-
+        WebElement sendButton = driver.findElement(By.xpath("//*[@id=\"pr_id_4\"]/div[3]/div/button/span[2]"));
+        sendButton.click();
+        assertEquals("Max", driver.findElement(By.className("name")).getText());
         assertEquals("Success!", driver.findElement(By.className("p-growl-title")).getText());
     }
 

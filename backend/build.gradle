@@ -31,7 +31,7 @@ dependencies {
 	//implementation 'org.flywaydb:flyway-core'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation('org.modelmapper:modelmapper:2.3.0')
+	implementation('org.modelmapper:modelmapper:2.3.2')
 	compileOnly 'org.projectlombok:lombok'
 	compile group: 'org.modelmapper', name: 'modelmapper', version: '0.7.5'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -49,6 +49,9 @@ dependencies {
 // https://mvnrepository.com/artifact/commons-io/commons-io
 	compile group: 'commons-io', name: 'commons-io', version: '2.7'
 
+
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+	compile group: 'org.apache.commons', name: 'commons-csv', version: '1.8'
 
 
 	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
