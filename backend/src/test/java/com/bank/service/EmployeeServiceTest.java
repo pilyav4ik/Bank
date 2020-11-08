@@ -1,28 +1,29 @@
 package com.bank.service;
 
+import com.bank.controller.EmployeeController;
 import com.bank.dto.EmployeeDto;
 import com.bank.mappers.EmployeeMapper;
 import com.bank.model.Employee;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 public class EmployeeServiceTest extends AbstractTest {
 
@@ -32,11 +33,12 @@ public class EmployeeServiceTest extends AbstractTest {
         super.setUp();
     }
 
-    @Autowired
+    @InjectMocks
     private EmployeeService service;
     @Autowired
     private EmployeeMapper employeeMapper;
-    MvcResult mvcResult;
+    private MvcResult mvcResult;
+    private EmployeeController controller;
 
     @Test
     public void getEmployeesList() throws Exception {
@@ -188,19 +190,24 @@ public class EmployeeServiceTest extends AbstractTest {
         assertEquals(employee2.getName(), "Max Second");
     }
 
-
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
     @Test
     public void saveEmployeesFromCSV() throws Exception {
-        String uri = "/api/employees/upload-csv-file";
+        String url = "/api/employees/save-from-csv";
 
-        byte[] fileContent = "employees2".getBytes(StandardCharsets.UTF_8);
-        MockMultipartFile filePart1 = new MockMultipartFile("file", "orig", null, fileContent);
 
-        standaloneSetup(new EmployeeServiceTest()).build()
-                .perform(multipart(uri).file(filePart1))
-                .andExpect(status().isFound())
-                .andExpect(model().attribute("fileContent", fileContent))
-                .andExpect(model().attribute("jsonContent", Collections.singletonMap("name", "yeeeah")));
+        String csvBuilder = "name,departmentId,salary,city,street,bankName,cardNumber\n" +
+                "Maxim,1,3855,Madrid,Street,Bank York,NY98675432100\n";
+        InputStream is = new ByteArrayInputStream(csvBuilder.getBytes());
 
+        MockMultipartFile mockFile = new MockMultipartFile("file", "employees.csv", "text/csv", is);
+
+        MockHttpServletResponse responseMessage = mvc.perform(MockMvcRequestBuilders.multipart(url)
+                .file(mockFile)
+                .param("file", "employees2.csv"))
+                .andReturn()
+                .getResponse();
+        assertEquals(responseMessage.getStatus(), 200);
     }
 }
