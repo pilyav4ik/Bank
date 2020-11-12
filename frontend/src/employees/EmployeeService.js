@@ -29,4 +29,8 @@ export class EmployeeService {
         let res = await axios.get("/api/employees=by-salary-desc");
         return res.data;
     }
+
+    upload(file){
+        return axios.post(this.baseURL+"/save-from-csv", file).then(res => res.data)
+    }
 }
