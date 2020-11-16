@@ -1,6 +1,5 @@
 package com.bank.service;
 
-import com.bank.controller.EmployeeController;
 import com.bank.dto.EmployeeDto;
 import com.bank.mappers.EmployeeMapper;
 import com.bank.model.Employee;
@@ -9,7 +8,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -35,12 +33,6 @@ public class EmployeeServiceTest extends AbstractTest {
         super.setUp();
     }
 
-    @InjectMocks
-    private EmployeeService service;
-    @Autowired
-    private EmployeeMapper employeeMapper;
-    private MvcResult mvcResult;
-    private EmployeeController controller;
     @Autowired
     private EmployeeMapper employeeMapper;
     private MvcResult mvcResult;
