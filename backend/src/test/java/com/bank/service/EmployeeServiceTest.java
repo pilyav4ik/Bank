@@ -41,9 +41,7 @@ public class EmployeeServiceTest extends AbstractTest {
     private EmployeeMapper employeeMapper;
     private MvcResult mvcResult;
     private EmployeeController controller;
-    @Autowired
-    private EmployeeMapper employeeMapper;
-    private MvcResult mvcResult;
+
 
     @Test
     public void getEmployeesList() throws Exception {
