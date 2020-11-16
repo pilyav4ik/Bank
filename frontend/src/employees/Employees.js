@@ -15,6 +15,7 @@ import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import {NavLink} from "react-bootstrap";
+import * as axios from "axios";
 
 
  class Employees extends Component{
@@ -30,6 +31,9 @@ import {NavLink} from "react-bootstrap";
              },
              selectedEmployee : {
 
+             },
+             fileWithEmployees : {
+                 path : null
              }
          };
          this.items = [
@@ -89,6 +93,29 @@ import {NavLink} from "react-bootstrap";
              });
      }
 
+     onFileChangeHandler = (e) => {
+         e.preventDefault();
+         this.setState({
+             selectedFile: e.target.files[0]
+         });
+         const formData = new FormData();
+         formData.append('file', this.state.selectedFile);
+         //Append the rest data then send
+         axios({
+             method: 'post',
+             url: '/api/employees/save-from-csv',
+             data: formData,
+             headers: {'Content-Type': 'multipart/form-data'}
+         })
+             .then(function (response) {
+                     //handle success
+                     console.log(response);
+                 },
+                 function (error) {
+                     console.log(error)
+                 });
+     };
+
      getAllEmployeesBySalaryAsc(){
          this.employeeService.getAllEmployeesBySalaryAsc().then(data =>  this.setState({employees: data}));
      }
@@ -109,10 +136,12 @@ import {NavLink} from "react-bootstrap";
          let sortBySalaryAsc = <a onClick={this.getAllEmployeesBySalaryAsc}><i className="pi pi-sort-up"/></a>;
          let sortBySalaryDesc = <a  onClick={this.getAllEmployeesBySalaryDesc}><i className="pi pi-sort-down"/></a>;
 
+         let uploadButton = <input type="file" className="form-control" name="file" onChange={this.onFileChangeHandler}/>;
 
          return (
              <div style={{width:'80%', margin: '0 auto', marginTop: '20px'}}>
                  <Menubar model={this.items}/>
+                 {uploadButton}
                  <br/>
                  {header}
                  Sort list by salary: {sortBySalaryAsc} {sortBySalaryDesc}
@@ -126,6 +155,8 @@ import {NavLink} from "react-bootstrap";
                          <Column field="departmentId" header="Department"/>
                      </DataTable>
                  </Panel>
+
+
                  <Dialog header="Create employee" visible={this.state.visible}
                          style={{width: '400px'}} footer={this.footer} modal={true}
                          onHide={() => this.setState({visible: false})}>
@@ -213,5 +244,14 @@ import {NavLink} from "react-bootstrap";
              }
          })
      }
-}
+
+     showUploadDialog() {
+         this.setState({
+             visible : true,
+             file : {
+                 path : null
+             }
+         })
+     }
+ }
 export default Employees;

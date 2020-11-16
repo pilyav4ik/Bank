@@ -4,6 +4,7 @@ import com.bank.controller.EmployeeController;
 import com.bank.dto.EmployeeDto;
 import com.bank.mappers.EmployeeMapper;
 import com.bank.model.Employee;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,6 +25,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class EmployeeServiceTest extends AbstractTest {
 
@@ -39,6 +41,9 @@ public class EmployeeServiceTest extends AbstractTest {
     private EmployeeMapper employeeMapper;
     private MvcResult mvcResult;
     private EmployeeController controller;
+    @Autowired
+    private EmployeeMapper employeeMapper;
+    private MvcResult mvcResult;
 
     @Test
     public void getEmployeesList() throws Exception {
@@ -54,6 +59,24 @@ public class EmployeeServiceTest extends AbstractTest {
     }
 
     @Test
+    public void getEmployeeById() throws Exception {
+        String uri = "/api/employees/90";
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).param("employee_id", "90"))
+                .andExpect(status().isOk()).andReturn();
+        String json = mvcResult.getResponse().getContentAsString();
+        EmployeeDto employee = new ObjectMapper().readValue(json, EmployeeDto.class);
+        EmployeeDto newEmployee = new EmployeeDto();
+        newEmployee.setId(90L);
+        newEmployee.setName("Test Name");
+        newEmployee.setDepartmentId(1L);
+        newEmployee.setSalary(2000.00);
+        newEmployee.setCity("Berlin");
+        newEmployee.setStreet("Berlinerstr. 21");
+        newEmployee.setBankName("Sparkasse");
+        newEmployee.setCardNumber("DE123456789023");
+        assertEquals(employee, newEmployee);
+    }
+    @Test
     public void saveEmployee() throws Exception {
         String uri = "/api/employees/";
         EmployeeDto employeeDto = new EmployeeDto(
@@ -61,10 +84,10 @@ public class EmployeeServiceTest extends AbstractTest {
                 "Test Name",
                 1L,
                 2000.00,
-                "Berlin",
-                "Berlinerstr. 21",
-                "Sparkasse",
-                "DE123456789023");
+                null,
+                null,
+                null,
+                null);
 
         String inputJson = super.mapToJson(employeeDto);
 
@@ -79,11 +102,34 @@ public class EmployeeServiceTest extends AbstractTest {
 
     @Test
     public void updateEmployee() throws Exception {
-        String uri = "/api/employees/22";
+        String uri = "/api/employees/90";
+        EmployeeDto employeeDto = new EmployeeDto(
+                90L,
+                "New Test Name",
+                1L,
+                2000.00,
+                "Berlin",
+                "Berlinerstr. 21",
+                "Sparkasse",
+                "DE123456789023");
+
+        String inputJson = super.mapToJson(employeeDto);
+
+        mvcResult = mvc.perform(MockMvcRequestBuilders.put(uri)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(inputJson)).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        assertEquals(employeeMapper.dtoToEntity(employeeDto).getName(), "New Test Name");
+    }
+
+    @Test
+    public void addEmployeeInfo() throws Exception{
+        String uri = "/api/employees/90";
         EmployeeDto employeeDto = new EmployeeDto(
                 null,
-                "New Test Name",
-                17L,
+                "Test Name",
+                1L,
                 2000.00,
                 "Berlin",
                 "Berlinerstr. 21",
@@ -98,30 +144,7 @@ public class EmployeeServiceTest extends AbstractTest {
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
-        assertEquals(employeeMapper.dtoToEntity(employeeDto).getName(), "New Test Name");
-    }
-
-    @Test
-    public void addEmployeeInfo() throws Exception{
-        String uri = "/api/employees/3";
-        Employee employee = new Employee();
-        employee.setName("Sam");
-        employee.setSalary(1500);
-        employee.setDepartmentId(1L);
-
-        employee.setCity("Berlin");
-        employee.setStreet("Alexander Platz");
-        employee.setBankName("Sparkasse");
-        employee.setCardNumber("DE12345678912");
-        String inputJson = super.mapToJson(employee);
-
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.put(uri)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(inputJson)).andReturn();
-
-        int status = mvcResult.getResponse().getStatus();
-        assertEquals(200, status);
-        assertEquals(employee.getBankName(), "Sparkasse");
+        assertEquals(employeeMapper.dtoToEntity(employeeDto).getName(), "Test Name");
     }
 
     @Test
@@ -186,8 +209,6 @@ public class EmployeeServiceTest extends AbstractTest {
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
-        assertEquals(employee1.getName(), "Tomas First");
-        assertEquals(employee2.getName(), "Max Second");
     }
 
     @Rule
