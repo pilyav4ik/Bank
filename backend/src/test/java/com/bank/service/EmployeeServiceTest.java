@@ -33,13 +33,9 @@ public class EmployeeServiceTest extends AbstractTest {
         super.setUp();
     }
 
-
-    @InjectMocks
-    private EmployeeService service;
     @Autowired
     private EmployeeMapper employeeMapper;
     private MvcResult mvcResult;
-    private EmployeeController controller;
 
     @Test
     public void getEmployeesList() throws Exception {
