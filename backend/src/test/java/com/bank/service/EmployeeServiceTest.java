@@ -1,6 +1,5 @@
 package com.bank.service;
 
-import com.bank.controller.EmployeeController;
 import com.bank.dto.EmployeeDto;
 import com.bank.mappers.EmployeeMapper;
 import com.bank.model.Employee;
@@ -40,10 +39,7 @@ public class EmployeeServiceTest extends AbstractTest {
     @Autowired
     private EmployeeMapper employeeMapper;
     private MvcResult mvcResult;
-    private EmployeeController controller;
-    @Autowired
-    private EmployeeMapper employeeMapper;
-    private MvcResult mvcResult;
+
 
     @Test
     public void getEmployeesList() throws Exception {
