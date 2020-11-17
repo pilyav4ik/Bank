@@ -1,22 +1,17 @@
 package com.bank.controller;
 
 import com.bank.dto.EmployeeDto;
-import com.bank.helpers.CSVHelper;
-import com.bank.message.ResponseMessage;
 import com.bank.model.Employee;
 import com.bank.service.EmployeeService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -103,36 +98,5 @@ public class EmployeeController {
     public List<Employee> saveListEmployees(@Valid @RequestBody List<EmployeeDto> employeeDtoList) {
         return service.saveListEmployeesService(employeeDtoList);
 
-    }
-
-    @PostMapping("/employees/save-from-csv")
-    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file, Model model) throws IOException {
-        ResponseEntity<ResponseMessage> result = null;
-        boolean finished = false;
-        String message = "";
-
-        if (CSVHelper.hasCSVFormat(file)) {
-            try {
-                service.csvToEmployees(file, model);
-                message = "Uploaded the file successfully: " + file.getOriginalFilename();
-                result = ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-                finished = true;
-            } catch (Exception e) {
-                message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-                message += e;
-                result = ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new ResponseMessage(message));
-                finished = true;
-            }
-        }
-        if (!CSVHelper.hasCSVFormat(file)){
-
-            message = "File is empty!";
-            result = ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage(message));
-        }
-        if (!finished) {
-            message = "Please upload a csv file!";
-            result = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
-        }
-        return result;
     }
 }

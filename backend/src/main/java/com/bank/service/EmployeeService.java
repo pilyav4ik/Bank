@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -40,8 +39,8 @@ public class EmployeeService {
     }
 
     public List<EmployeeDto> getAllEmployees(){
-        List<Employee> getAllEmployee = employeeRepository.findAll();
-        return employeeMapper.entityListToDto(getAllEmployee);
+        List<Employee> findAll = employeeRepository.findAll();
+        return employeeMapper.entityListToDto(findAll);
     }
 
     public Page<Employee> getAllEmployeesByPage(Pageable pageable){
@@ -125,7 +124,7 @@ public class EmployeeService {
     }
 
 
-    public void csvToEmployees(@RequestParam("employees") MultipartFile file, Model model) {
+    public String csvToEmployees(@RequestParam("file") MultipartFile file, Model model) {
         // validate file
         if (file.isEmpty()) {
             model.addAttribute("message", "Please select a CSV file to upload.");
@@ -139,21 +138,36 @@ public class EmployeeService {
                         .withIgnoreLeadingWhiteSpace(true)
                         .build();
 
-                List<Employee> employees = csvToBean.parse();
-                employeeRepository.saveAll(employees);
+                List users = csvToBean.parse();
+                employeeRepository.saveAll(users);
 
-                model.addAttribute("employees", employees);
+                model.addAttribute("users", users);
                 model.addAttribute("status", true);
 
-            }
-            catch (FileNotFoundException e){
+            } catch (Exception ex) {
                 model.addAttribute("message", "An error occurred while processing the CSV file.");
                 model.addAttribute("status", false);
             }
-            catch (Exception e){
-                model.addAttribute(e);
-            }
         }
 
+        return "file-upload-status";
     }
+
+    /*public List<Employee> saveListEmployeesFromCSVToDBService(Iterable<Employee> employeeList) {
+        List<Employee> newEmployeesList = new ArrayList<>();
+        for (Employee employeeInput : employeeList){
+            Employee employee = new Employee();
+            employee.setName(employeeInput.getName());
+            employee.setDepartmentId(employeeInput.getDepartmentId());
+            employee.setSalary(employeeInput.getSalary());
+
+            employee.setCity(employeeInput.getCity());
+            employee.setStreet(employeeInput.getStreet());
+            employee.setCardNumber(employeeInput.getCardNumber());
+            employee.setBankName(employeeInput.getBankName());
+            newEmployeesList.add(employee);
+        }
+        return employeeRepository.saveAll(newEmployeesList);
+    }*/
+
 }

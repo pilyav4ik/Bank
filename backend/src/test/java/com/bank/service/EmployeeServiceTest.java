@@ -40,7 +40,6 @@ public class EmployeeServiceTest extends AbstractTest {
     private EmployeeMapper employeeMapper;
     private MvcResult mvcResult;
 
-
     @Test
     public void getEmployeesList() throws Exception {
         String uri = "/api/employees/";
