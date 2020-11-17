@@ -124,7 +124,7 @@ public class EmployeeService {
     }
 
 
-    public String csvToEmployees(@RequestParam("file") MultipartFile file, Model model) {
+    public void csvToEmployees(@RequestParam("file") MultipartFile file, Model model) {
         // validate file
         if (file.isEmpty()) {
             model.addAttribute("message", "Please select a CSV file to upload.");
@@ -150,24 +150,7 @@ public class EmployeeService {
             }
         }
 
-        return "file-upload-status";
     }
 
-    /*public List<Employee> saveListEmployeesFromCSVToDBService(Iterable<Employee> employeeList) {
-        List<Employee> newEmployeesList = new ArrayList<>();
-        for (Employee employeeInput : employeeList){
-            Employee employee = new Employee();
-            employee.setName(employeeInput.getName());
-            employee.setDepartmentId(employeeInput.getDepartmentId());
-            employee.setSalary(employeeInput.getSalary());
-
-            employee.setCity(employeeInput.getCity());
-            employee.setStreet(employeeInput.getStreet());
-            employee.setCardNumber(employeeInput.getCardNumber());
-            employee.setBankName(employeeInput.getBankName());
-            newEmployeesList.add(employee);
-        }
-        return employeeRepository.saveAll(newEmployeesList);
-    }*/
 
 }
