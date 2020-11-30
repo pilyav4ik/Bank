@@ -46,10 +46,12 @@ public class EmployeeService {
     public Page<Employee> getAllEmployeesByPage(Pageable pageable){
         return employeePaginationRepository.findAll(pageable);
     }
+
     @Transactional(readOnly = true)
     public List<Employee> getAllEmployeesBySalaryAsc(){
         return employeeRepository.findAll(Sort.by("salary").ascending());
     }
+
     @Transactional(readOnly = true)
     public List<Employee> getAllEmployeesBySalaryDesc(){
         return employeeRepository.findAll(Sort.by("salary").descending());
@@ -90,6 +92,7 @@ public class EmployeeService {
         employee.setName(employeeDto.getName());
         employee.setDepartmentId(employeeDto.getDepartmentId());
         employee.setSalary(employeeDto.getSalary());
+        employee.setUpdateDateTime(employeeDto.getUpdateDateTime());
         return employeeRepository.save(employee);
     }
 
@@ -111,16 +114,21 @@ public class EmployeeService {
     }
 
 
-    public List<Employee> saveListEmployeesService(Iterable<EmployeeDto> employeeList) {
+    public List<EmployeeDto> saveListEmployeesService(Iterable<EmployeeDto> employeeList) {
         List<Employee> newEmployeesList = new ArrayList<>();
         for (EmployeeDto employeeDto : employeeList){
             Employee employee = new Employee();
             employee.setName(employeeDto.getName());
             employee.setDepartmentId(employeeDto.getDepartmentId());
             employee.setSalary(employeeDto.getSalary());
+            employee.setCity(employeeDto.getCity());
+            employee.setStreet(employeeDto.getStreet());
+            employee.setCardNumber(employeeDto.getCardNumber());
+            employee.setBankName(employeeDto.getBankName());
             newEmployeesList.add(employee);
         }
-        return employeeRepository.saveAll(newEmployeesList);
+        employeeRepository.saveAll(newEmployeesList);
+        return employeeMapper.entityListToDto(newEmployeesList);
     }
 
 

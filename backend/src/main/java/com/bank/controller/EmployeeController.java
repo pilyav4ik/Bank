@@ -100,7 +100,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees/save-all")
-    public List<Employee> saveListEmployees(@Valid @RequestBody List<EmployeeDto> employeeDtoList) {
+    public List<EmployeeDto> saveListEmployees(@Valid @RequestBody List<EmployeeDto> employeeDtoList) {
         return service.saveListEmployeesService(employeeDtoList);
 
     }
