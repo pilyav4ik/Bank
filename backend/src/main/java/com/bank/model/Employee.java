@@ -1,23 +1,24 @@
 package com.bank.model;
 
-import com.bank.dto.AbstractDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
+
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name="employee")
-public class Employee extends AbstractDto {
+public class Employee {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id")
     @CsvBindByName
@@ -39,4 +40,11 @@ public class Employee extends AbstractDto {
     private String bankName;
     @CsvBindByName
     private String cardNumber;
+
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
+
 }

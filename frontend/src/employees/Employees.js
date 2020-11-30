@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component, useState} from 'react';
 import {EmployeeService} from './EmployeeService';
 import '../App.css';
 import { DataTable } from 'primereact/datatable';
@@ -153,6 +153,8 @@ import * as axios from "axios";
                          <Column field="name" header="Name"/>
                          <Column field="salary" header="Salary"/>
                          <Column field="departmentId" header="Department"/>
+                         <Column field="createDateTime" header="Created"/>
+                         <Column field="updateDateTime" header="Updated"/>
                      </DataTable>
                  </Panel>
 
@@ -245,13 +247,5 @@ import * as axios from "axios";
          })
      }
 
-     showUploadDialog() {
-         this.setState({
-             visible : true,
-             file : {
-                 path : null
-             }
-         })
-     }
  }
 export default Employees;

@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +80,8 @@ public class EmployeeServiceTest extends AbstractTest {
                 null,
                 null,
                 null,
+                null,
+                LocalDateTime.now(),
                 null);
 
         String inputJson = super.mapToJson(employeeDto);
@@ -94,16 +97,18 @@ public class EmployeeServiceTest extends AbstractTest {
 
     @Test
     public void updateEmployee() throws Exception {
-        String uri = "/api/employees/90";
+        String uri = "/api/employees/53";
         EmployeeDto employeeDto = new EmployeeDto(
-                90L,
+                53L,
                 "New Test Name",
                 1L,
                 2000.00,
                 "Berlin",
                 "Berlinerstr. 21",
                 "Sparkasse",
-                "DE123456789023");
+                "DE123456789023",
+                LocalDateTime.now(),
+                LocalDateTime.now());
 
         String inputJson = super.mapToJson(employeeDto);
 
@@ -126,7 +131,9 @@ public class EmployeeServiceTest extends AbstractTest {
                 "Berlin",
                 "Berlinerstr. 21",
                 "Sparkasse",
-                "DE123456789023");
+                "DE123456789023",
+                LocalDateTime.now(),
+                LocalDateTime.now());
 
         String inputJson = super.mapToJson(employeeDto);
 
