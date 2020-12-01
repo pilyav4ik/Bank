@@ -3,6 +3,7 @@ package com.bank.mappers;
 import com.bank.dto.EmployeeDto;
 import com.bank.model.Employee;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,5 +29,12 @@ public class EmployeeMapper {
     public List<Employee> dtoListToEntity(List<EmployeeDto> employeeDtoList){
         return employeeDtoList.stream().map(this::dtoToEntity).collect(Collectors.toList());
     }
+
+
+    public Page<EmployeeDto> employeeListToDtoPagible(Page<Employee> employeeList) {
+        Page<EmployeeDto> dto = employeeList.map(this::entityToDto);
+        return dto;
+    }
+
 
 }

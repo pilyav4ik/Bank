@@ -43,42 +43,51 @@ public class EmployeeService {
         return employeeMapper.entityListToDto(findAll);
     }
 
-    public Page<Employee> getAllEmployeesByPage(Pageable pageable){
-        return employeePaginationRepository.findAll(pageable);
+    public Page<EmployeeDto> getAllEmployeesByPage(Pageable pageable){
+        Page<Employee> employeePage = employeePaginationRepository.findAll(pageable);
+        return employeeMapper.employeeListToDtoPagible(employeePage);
     }
 
     @Transactional(readOnly = true)
-    public List<Employee> getAllEmployeesBySalaryAsc(){
-        return employeeRepository.findAll(Sort.by("salary").ascending());
+    public List<EmployeeDto> getAllEmployeesBySalaryAsc(){
+        List<Employee> employeeList = employeeRepository.findAll(Sort.by("salary").ascending());
+        return employeeMapper.entityListToDto(employeeList);
     }
 
     @Transactional(readOnly = true)
-    public List<Employee> getAllEmployeesBySalaryDesc(){
-        return employeeRepository.findAll(Sort.by("salary").descending());
+    public List<EmployeeDto> getAllEmployeesBySalaryDesc(){
+        List<Employee> employeeList = employeeRepository.findAll(Sort.by("salary").descending());
+        return employeeMapper.entityListToDto(employeeList);
     }
 
     @Transactional(readOnly = true)
-    public List<Employee> getEmployeesByDepartment(@PathVariable Long department_id){
-        return employeeRepository.findAllByDepartmentId(department_id);
+    public List<EmployeeDto> getEmployeesByDepartment(@PathVariable Long department_id){
+        List<Employee> employeeList =  employeeRepository.findAllByDepartmentId(department_id);
+        return employeeMapper.entityListToDto(employeeList);
     }
 
     @Transactional(readOnly = true)
-    public List<Employee> getEmployeesByStreet(@PathVariable String street){
-        return employeeRepository.findAllByStreet(street);
+    public List<EmployeeDto> getEmployeesByStreet(@PathVariable String street){
+        List<Employee> employeeList = employeeRepository.findAllByStreet(street);
+        return employeeMapper.entityListToDto(employeeList);
     }
 
     @Transactional(readOnly = true)
-    public List<Employee> getEmployeesBySalary(@PathVariable double salary){
-        return employeeRepository.findAllBySalary(salary);
+    public List<EmployeeDto> getEmployeesBySalary(@PathVariable double salary){
+        List<Employee> employeeList = employeeRepository.findAllBySalary(salary);
+        return employeeMapper.entityListToDto(employeeList);
     }
 
     @Transactional(readOnly = true)
-    public List<Employee> getEmployeesByBank(@PathVariable String bankName){
-        return employeeRepository.findAllByBankName(bankName);
+    public List<EmployeeDto> getEmployeesByBank(@PathVariable String bankName){
+        List<Employee> employeeList = employeeRepository.findAllByBankName(bankName);
+        return employeeMapper.entityListToDto(employeeList);
     }
 
-    public Employee getEmployeeById(Long id){
-        return employeeRepository.getOne(id);
+    @Transactional(readOnly = true)
+    public EmployeeDto getEmployeeById(Long id){
+        Employee employee = employeeRepository.getOne(id);
+        return employeeMapper.entityToDto(employee);
     }
 
     public EmployeeDto createEmployee(EmployeeDto employeeDto){
