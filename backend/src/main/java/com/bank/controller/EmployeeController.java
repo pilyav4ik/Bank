@@ -38,7 +38,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees-page")
-    public Page<Employee> employeesPaging (Pageable pageable){
+    public Page<EmployeeDto> employeesPaging (Pageable pageable){
         return service.getAllEmployeesByPage(pageable);
     }
 
@@ -59,10 +59,10 @@ public class EmployeeController {
 
     @PutMapping("/employees-add-info/{id}")
     public Employee updateEmployeeWithInfo(@PathVariable Long id,
-                                           @Valid @RequestBody EmployeeDto employeeWithInfo) {
+                                           @Valid
+@RequestBody EmployeeDto employeeWithInfo) {
         return service.updateEmployeeWithInfo(id, employeeWithInfo);
     }
-
     @DeleteMapping("/employees/{id}")
     public void deleteEmployee(@PathVariable Long id) {
         service.deleteEmployee(id);
@@ -70,32 +70,32 @@ public class EmployeeController {
 
 
     @GetMapping("/employees=by-salary-asc")
-    public List<Employee> employeesBySalaryAsc() {
+    public List<EmployeeDto> employeesBySalaryAsc() {
         return service.getAllEmployeesBySalaryAsc();
     }
 
     @GetMapping("/employees=by-salary-desc")
-    public List<Employee> employeesBySalaryDesc() {
+    public List<EmployeeDto> employeesBySalaryDesc() {
         return service.getAllEmployeesBySalaryDesc();
     }
 
     @GetMapping("/employees/department={departmentId}")
-    public List<Employee> employeesByDepartment(@PathVariable Long departmentId) {
+    public List<EmployeeDto> employeesByDepartment(@PathVariable Long departmentId) {
         return service.getEmployeesByDepartment(departmentId);
     }
 
     @GetMapping("/employees/street={street}")
-    public List<Employee> employeesByStreet(@PathVariable String street) {
+    public List<EmployeeDto> employeesByStreet(@PathVariable String street) {
         return service.getEmployeesByStreet(street);
     }
 
     @GetMapping("/employees/salary={salary}")
-    public List<Employee> employeesBySalary(@PathVariable double salary) {
+    public List<EmployeeDto> employeesBySalary(@PathVariable double salary) {
         return service.getEmployeesBySalary(salary);
     }
 
     @GetMapping("/employees/bank={bankName}")
-    public List<Employee> employeesByBank(@PathVariable String bankName) {
+    public List<EmployeeDto> employeesByBank(@PathVariable String bankName) {
         return service.getEmployeesByBank(bankName);
     }
 

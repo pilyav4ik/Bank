@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,13 +52,13 @@ public class EmployeeServiceTest extends AbstractTest {
 
     @Test
     public void getEmployeeById() throws Exception {
-        String uri = "/api/employees/90";
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).param("employee_id", "90"))
+        String uri = "/api/employees/58";
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).param("employee_id", "58"))
                 .andExpect(status().isOk()).andReturn();
         String json = mvcResult.getResponse().getContentAsString();
         EmployeeDto employee = new ObjectMapper().readValue(json, EmployeeDto.class);
         EmployeeDto newEmployee = new EmployeeDto();
-        newEmployee.setId(90L);
+        newEmployee.setId(58L);
         newEmployee.setName("Test Name");
         newEmployee.setDepartmentId(1L);
         newEmployee.setSalary(2000.00);
@@ -81,7 +80,7 @@ public class EmployeeServiceTest extends AbstractTest {
                 null,
                 null,
                 null,
-                LocalDateTime.now(),
+                null,
                 null);
 
         String inputJson = super.mapToJson(employeeDto);
@@ -97,24 +96,25 @@ public class EmployeeServiceTest extends AbstractTest {
 
     @Test
     public void updateEmployee() throws Exception {
-        String uri = "/api/employees/53";
+        String uri = "/api/employees/76";
         EmployeeDto employeeDto = new EmployeeDto(
-                53L,
+                null,
                 "New Test Name",
                 1L,
                 2000.00,
-                "Berlin",
-                "Berlinerstr. 21",
-                "Sparkasse",
-                "DE123456789023",
-                LocalDateTime.now(),
-                LocalDateTime.now());
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
 
         String inputJson = super.mapToJson(employeeDto);
 
         mvcResult = mvc.perform(MockMvcRequestBuilders.put(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(inputJson)).andReturn();
+
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
         assertEquals(employeeMapper.dtoToEntity(employeeDto).getName(), "New Test Name");
@@ -122,9 +122,9 @@ public class EmployeeServiceTest extends AbstractTest {
 
     @Test
     public void addEmployeeInfo() throws Exception{
-        String uri = "/api/employees/90";
+        String uri = "/api/employees/76";
         EmployeeDto employeeDto = new EmployeeDto(
-                null,
+                76L,
                 "Test Name",
                 1L,
                 2000.00,
@@ -132,8 +132,8 @@ public class EmployeeServiceTest extends AbstractTest {
                 "Berlinerstr. 21",
                 "Sparkasse",
                 "DE123456789023",
-                LocalDateTime.now(),
-                LocalDateTime.now());
+                null,
+                null);
 
         String inputJson = super.mapToJson(employeeDto);
 
@@ -183,20 +183,31 @@ public class EmployeeServiceTest extends AbstractTest {
     @Test
     public void saveListEmployees() throws Exception {
         String uri = "/api/employees/save-all";
-        Employee employee1 = new Employee();
-        employee1.setDepartmentId(1L);
-        employee1.setSalary(200);
-        employee1.setName("Tomas First");
-        employee1.setCity("Berlin");
-        employee1.setStreet("Street first");
-        Employee employee2 = new Employee();
-        employee2.setDepartmentId(1L);
-        employee2.setSalary(200);
-        employee2.setName("Max Second");
-        employee2.setCity("Berlin");
-        employee2.setStreet("Street second");
+        EmployeeDto employee1 = new EmployeeDto(
+                null,
+                "Test Name First",
+                1L,
+                2000.00,
+                "Berlin",
+                "Berlinerstr. 21",
+                "Sparkasse",
+                "DE123456789023",
+                null,
+                null);
 
-        List<Employee> employeeList = new ArrayList<>();
+        EmployeeDto employee2 = new EmployeeDto(
+                null,
+                "Test Name Second",
+                1L,
+                2000.00,
+                "Berlin",
+                "Berlinerstr. 21",
+                "Sparkasse",
+                "DE123456789023",
+                null,
+                null);
+
+        List<EmployeeDto> employeeList = new ArrayList<>();
         employeeList.add(employee1);
         employeeList.add(employee2);
 
