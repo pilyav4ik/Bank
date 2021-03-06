@@ -1,4 +1,5 @@
 import axios from 'axios';
+import FormFileInput from "react-bootstrap/FormFileInput";
 
 export class EmployeeService {
 
@@ -30,7 +31,19 @@ export class EmployeeService {
         return res.data;
     }
 
-    upload(file){
-        return axios.post(this.baseURL+"/save-from-csv", file).then(res => res.data)
+    upload(file, onUploadProgress) {
+        let fileInput = new FormFileInput();
+        let formData = new FormData();
+        console.log(file);
+        formData.append("file", fileInput.files[file]);
+
+        return axios.post("/api/employees/save-from-csv", formData, {
+            onUploadProgress,
+        }).then(res => {console.log(res)});
+    }
+
+    static async getFiles() {
+        let data = await axios.get("/files");
+        return data.data;
     }
 }
