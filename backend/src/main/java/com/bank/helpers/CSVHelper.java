@@ -4,7 +4,6 @@ import com.bank.model.Employee;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,11 +15,6 @@ import java.util.List;
 
 public class CSVHelper {
 
-    public static boolean hasCSVFormat(MultipartFile file) {
-
-        String TYPE = "text/csv";
-        return TYPE.equals(file.getContentType());
-    }
 
     public static List<Employee> csvToEmployees(InputStream is) {
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));

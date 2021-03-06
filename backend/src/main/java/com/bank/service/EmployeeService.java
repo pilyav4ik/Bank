@@ -14,9 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -141,13 +139,7 @@ public class EmployeeService {
     }
 
 
-    public void csvToEmployees(@RequestParam("file") MultipartFile file, Model model) {
-        // validate file
-        if (file.isEmpty()) {
-            model.addAttribute("message", "Please select a CSV file to upload.");
-            model.addAttribute("status", false);
-        } else {
-
+    public List<EmployeeDto> csvToEmployees( MultipartFile file) {
             try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
 
                 CsvToBean csvToBean = new CsvToBeanBuilder(reader)
@@ -155,18 +147,13 @@ public class EmployeeService {
                         .withIgnoreLeadingWhiteSpace(true)
                         .build();
 
-                List users = csvToBean.parse();
+                List<Employee> users = csvToBean.parse();
                 employeeRepository.saveAll(users);
-
-                model.addAttribute("users", users);
-                model.addAttribute("status", true);
-
+                return employeeMapper.entityListToDto(users);
             } catch (Exception ex) {
-                model.addAttribute("message", "An error occurred while processing the CSV file.");
-                model.addAttribute("status", false);
+                System.out.println(ex.getMessage());
             }
-        }
-
+            return csvToEmployees(file);
     }
 
 

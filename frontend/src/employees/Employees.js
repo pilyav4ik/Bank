@@ -15,12 +15,14 @@ import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import {NavLink} from "react-bootstrap";
-import * as axios from "axios";
+import Upload from "./Upload";
+import {FileUpload} from "primereact/fileupload";
+
 
 
  class Employees extends Component{
-     constructor(){
-         super();
+     constructor(props){
+         super(props);
          this.state = {
              visible : false,
              employee: {
@@ -53,6 +55,7 @@ import * as axios from "axios";
                  command : () => {this.delete()}
              }
          ];
+
          this.employeeService = new EmployeeService();
          this.save = this.save.bind(this);
          this.delete = this.delete.bind(this);
@@ -93,28 +96,6 @@ import * as axios from "axios";
              });
      }
 
-     onFileChangeHandler = (e) => {
-         e.preventDefault();
-         this.setState({
-             selectedFile: e.target.files[0]
-         });
-         const formData = new FormData();
-         formData.append('file', this.state.selectedFile);
-         //Append the rest data then send
-         axios({
-             method: 'post',
-             url: '/api/employees/save-from-csv',
-             data: formData,
-             headers: {'Content-Type': 'multipart/form-data'}
-         })
-             .then(function (response) {
-                     //handle success
-                     console.log(response);
-                 },
-                 function (error) {
-                     console.log(error)
-                 });
-     };
 
      getAllEmployeesBySalaryAsc(){
          this.employeeService.getAllEmployeesBySalaryAsc().then(data =>  this.setState({employees: data}));
@@ -129,20 +110,21 @@ import * as axios from "axios";
 
      render(){
          let header = <div style={{textAlign:'left'}}>
+
              <Button type="button" icon="pi pi-external-link" iconPos="left" label="CSV" onClick={this.export}/>
+             <Upload/>
              <NavLink type={ "button"} className={"form-check form-check-inline"} href="/employees-info">More info</NavLink>
          </div>;
 
          let sortBySalaryAsc = <a onClick={this.getAllEmployeesBySalaryAsc}><i className="pi pi-sort-up"/></a>;
          let sortBySalaryDesc = <a  onClick={this.getAllEmployeesBySalaryDesc}><i className="pi pi-sort-down"/></a>;
 
-         let uploadButton = <input type="file" className="form-control" name="file" onChange={this.onFileChangeHandler}/>;
 
          return (
              <div style={{width:'80%', margin: '0 auto', marginTop: '20px'}}>
                  <Menubar model={this.items}/>
-                 {uploadButton}
                  <br/>
+
                  {header}
                  Sort list by salary: {sortBySalaryAsc} {sortBySalaryDesc}
                  <Panel header="React CRUD App">
